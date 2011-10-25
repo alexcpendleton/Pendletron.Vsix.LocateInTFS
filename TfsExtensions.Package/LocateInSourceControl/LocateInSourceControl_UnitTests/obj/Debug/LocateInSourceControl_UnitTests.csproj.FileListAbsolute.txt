@@ -1,0 +1,11 @@
+D:\Projects\TfsExtensions.Package\LocateInSourceControl\LocateInSourceControl_UnitTests\bin\Debug\LocateInSourceControl_UnitTests.dll
+D:\Projects\TfsExtensions.Package\LocateInSourceControl\LocateInSourceControl_UnitTests\bin\Debug\LocateInSourceControl_UnitTests.pdb
+D:\Projects\TfsExtensions.Package\LocateInSourceControl\LocateInSourceControl_UnitTests\bin\Debug\LocateInSourceControl.dll
+D:\Projects\TfsExtensions.Package\LocateInSourceControl\LocateInSourceControl_UnitTests\bin\Debug\Microsoft.VSSDK.TestHostFramework.dll
+D:\Projects\TfsExtensions.Package\LocateInSourceControl\LocateInSourceControl_UnitTests\bin\Debug\Microsoft.VSSDK.UnitTestLibrary.dll
+D:\Projects\TfsExtensions.Package\LocateInSourceControl\LocateInSourceControl_UnitTests\bin\Debug\LocateInSourceControl.pdb
+D:\Projects\TfsExtensions.Package\LocateInSourceControl\LocateInSourceControl_UnitTests\bin\Debug\Microsoft.VSSDK.UnitTestLibrary.xml
+D:\Projects\TfsExtensions.Package\LocateInSourceControl\LocateInSourceControl_UnitTests\bin\Debug\Microsoft.VSSDK.TestHostFramework.pdb
+D:\Projects\TfsExtensions.Package\LocateInSourceControl\LocateInSourceControl_UnitTests\obj\Debug\ResolveAssemblyReference.cache
+D:\Projects\TfsExtensions.Package\LocateInSourceControl\LocateInSourceControl_UnitTests\obj\Debug\LocateInSourceControl_UnitTests.dll
+D:\Projects\TfsExtensions.Package\LocateInSourceControl\LocateInSourceControl_UnitTests\obj\Debug\LocateInSourceControl_UnitTests.pdb
