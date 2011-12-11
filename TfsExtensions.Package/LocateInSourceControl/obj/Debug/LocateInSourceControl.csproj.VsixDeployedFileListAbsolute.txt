@@ -1,4 +1,0 @@
-C:\Users\Alex\AppData\Local\Microsoft\VisualStudio\10.0Exp\Extensions\Microsoft\LocateInSourceControl\1.0\\LocateInSourceControl.dll
-C:\Users\Alex\AppData\Local\Microsoft\VisualStudio\10.0Exp\Extensions\Microsoft\LocateInSourceControl\1.0\\LocateInSourceControl.pkgdef
-C:\Users\Alex\AppData\Local\Microsoft\VisualStudio\10.0Exp\Extensions\Microsoft\LocateInSourceControl\1.0\\extension.vsixmanifest
-C:\Users\Alex\AppData\Local\Microsoft\VisualStudio\10.0Exp\Extensions\Microsoft\LocateInSourceControl\1.0\\LocateInSourceControl.pdb
