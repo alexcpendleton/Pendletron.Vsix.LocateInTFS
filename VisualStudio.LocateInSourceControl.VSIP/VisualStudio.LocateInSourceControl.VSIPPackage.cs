@@ -43,6 +43,10 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
     [Guid(GuidList.guidVisualStudio_LocateInSourceControl_VSIPPkgString)]
     public sealed class VisualStudio_LocateInSourceControl_VSIPPackage : Package
     {
+
+
+
+		DTE2 _dte = null
         /// <summary>
         /// Default constructor of the package.
         /// Inside this method you can place any initialization code that does not require 
@@ -53,6 +57,7 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
         public VisualStudio_LocateInSourceControl_VSIPPackage()
         {
             Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
+			_dte = (DTE2)this.GetService(typeof(DTE));
         }
 
 
@@ -96,37 +101,31 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 			return GetService(typeof(T)) as T;
 		}
 
-		/// <summary>
-		/// This function is the callback used to execute a command when the a menu item is clicked.
-		/// See the Initialize method to see how the menu item is associated to this function using
-		/// the OleMenuCommandService service and the MenuCommand class.
-		/// </summary>
-		private void MenuItemCallback(object sender, EventArgs e)
+		public void Locate()
 		{
-
-			var dte = (DTE2)this.GetService(typeof(DTE));
-			var y = GetSelectedNodes();
+			var selectedNodes = GetSelectedNodes();
 
 			List<string> nodefiles = new List<string>();
-			foreach (VSITEMSELECTION vsItemSel in y)
+			foreach (VSITEMSELECTION vsItemSel in selectedNodes)
 			{
 				IVsSccProject2 pscp2 = vsItemSel.pHier as IVsSccProject2;
 				nodefiles.AddRange(GetNodeFiles(pscp2, vsItemSel.itemid));
-
 			}
-			TeamFoundationServerExt ext = dte.GetObject("Microsoft.VisualStudio.TeamFoundation.TeamFoundationServerExt") as TeamFoundationServerExt;
-			string uri = ext.ActiveProjectContext.ProjectUri;
-			HatPackage hat = new HatPackage();
-			VersionControlServer o = hat.GetVersionControlServer();
 
-			Workspace workspace = o.GetWorkspace(nodefiles[0]);
+			if(nodefiles.Count == 0) return; // Throw an exception, log to output?
+			
+			HatPackage hat = new HatPackage();
+			VersionControlServer vcServer = hat.GetVersionControlServer();
+
+			string localFilePath = nodefiles[0];
+
+			Workspace workspace = vcServer.GetWorkspace(localFilePath);
 			string serverItem = "";
 			try {
-				serverItem = workspace.TryGetServerItemForLocalItem(nodefiles[0]);
+				serverItem = workspace.TryGetServerItemForLocalItem(localFilePath);
 			} catch (Exception) {
 			
 			}
-
 			if (!String.IsNullOrEmpty(serverItem))
 			{
 				Assembly tfsVC = Assembly.Load("Microsoft.VisualStudio.TeamFoundation.VersionControl");
@@ -144,7 +143,16 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 					}
 				}
 			}
+		}
 
+		/// <summary>
+		/// This function is the callback used to execute a command when the a menu item is clicked.
+		/// See the Initialize method to see how the menu item is associated to this function using
+		/// the OleMenuCommandService service and the MenuCommand class.
+		/// </summary>
+		private void MenuItemCallback(object sender, EventArgs e)
+		{
+			Locate();
 		}
 
 		///// <summary>
