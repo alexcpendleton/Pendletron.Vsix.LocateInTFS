@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AlexPendleton.VisualStudio_LocateInSourceControl_VSIP</RootNamespace>
     <AssemblyName>VisualStudio.LocateInSourceControl.VSIP</AssemblyName>
-    <SignAssembly>True</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
   </PropertyGroup>
@@ -128,6 +128,8 @@
     <Compile Include="VisualStudio.LocateInSourceControl.VSIPPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PkgCmdID.cs" />
+    <Compile Include="Wrappers\AccessPrivateWrapper.cs" />
+    <Compile Include="Wrappers\HatPackage.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">

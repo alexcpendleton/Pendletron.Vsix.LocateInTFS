@@ -18,6 +18,7 @@ using Microsoft.VisualStudio.TeamFoundation;
 using Microsoft.TeamFoundation.Client;
 using Microsoft.VisualStudio.TeamFoundation;
 using System.Reflection;
+using AlexPendleton.VisualStudio_LocateInSourceControl_VSIP.Wrappers;
 
 namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 {
@@ -104,17 +105,6 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 		{
 
 			var dte = (DTE2)this.GetService(typeof(DTE));
-			//dte.ExecuteCommand("View.TfsSourceControlExplorer");
-
-			//foreach (Window w in dte.Windows)
-			//{
-			//    if (w.Caption == "Source Control Explorer")
-			//    {
-
-			//    }
-			//}
-			//Microsoft.VisualStudio.TeamFoundation.VersionControl
-
 			var y = GetSelectedNodes();
 
 			List<string> nodefiles = new List<string>();
@@ -126,16 +116,16 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 			}
 			TeamFoundationServerExt ext = dte.GetObject("Microsoft.VisualStudio.TeamFoundation.TeamFoundationServerExt") as TeamFoundationServerExt;
 			string uri = ext.ActiveProjectContext.ProjectUri;
+			HatPackage hat = new HatPackage();
+			VersionControlServer o = hat.GetVersionControlServer();
 
+			Workspace workspace = o.GetWorkspace(nodefiles[0]);
 			string serverItem = "";
-			using (TeamFoundationServer tfs = new TeamFoundationServer(ext.ActiveProjectContext.DomainUri, new UICredentialsProvider()))
-			{
-				tfs.EnsureAuthenticated();
-				VersionControlServer vcs = tfs.GetService<VersionControlServer>();
-				var ws = vcs.GetWorkspace(nodefiles[0]);
-				serverItem = ws.GetServerItemForLocalItem(nodefiles[0]);
+			try {
+				serverItem = workspace.TryGetServerItemForLocalItem(nodefiles[0]);
+			} catch (Exception) {
+			
 			}
-			VersionControlServer s;
 
 			if (!String.IsNullOrEmpty(serverItem))
 			{
@@ -147,7 +137,6 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 				object toolWindowSccExplorerInstance = prop.GetValue(null, null);
 				if (toolWindowSccExplorerInstance != null)
 				{
-					//fuck.GetType().GetMethod("Navigate", BindingFlags.Default| BindingFlags.Instance | BindingFlags.NonPublic)
 					var navMethod = toolWindowSccExplorerInstance.GetType().GetMethod("Navigate", BindingFlags.Default | BindingFlags.Instance | BindingFlags.NonPublic);
 					if (navMethod != null)
 					{
