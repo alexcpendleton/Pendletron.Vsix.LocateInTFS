@@ -41,6 +41,7 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 	// This attribute is needed to let the shell know that this package exposes some menus.
 	[ProvideMenuResource("Menus.ctmenu", 1)]
 	[Guid(GuidList.guidVisualStudio_LocateInSourceControl_VSIPPkgString)]
+    [ProvideAutoLoad("{f1536ef8-92ec-443c-9ed7-fdadf150da82}")]
 	public sealed class VisualStudio_LocateInSourceControl_VSIPPackage : Package
 	{
 
@@ -63,7 +64,6 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 
 		/////////////////////////////////////////////////////////////////////////////
 		// Overriden Package Implementation
-		#region Package Members
 
 		/// <summary>
 		/// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -73,7 +73,7 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 		{
 			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
 			base.Initialize();
-
+            /* */
 			// Add our command handlers for menu (commands must exist in the .vsct file)
 			OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
 			if (null != mcs)
@@ -82,10 +82,73 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 				CommandID menuCommandID = new CommandID(GuidList.guidVisualStudio_LocateInSourceControl_VSIPCmdSet, (int)PkgCmdIDList.cmdidLocateInSourceControl);
 				MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
 				mcs.AddCommand(menuItem);
+                
+				//CommandID menuCommandID2 = new CommandID(GuidList.guidSolutionExplorer, (int)PkgCmdIDList.cmdidLocateInSourceControl);
+				//MenuCommand menuItem2 = new MenuCommand(MenuItemCallback, menuCommandID);
+				//mcs.AddCommand(menuItem2);
 			}
+            /* */
+            /* * /
+            // Add our command handlers for menu (commands must exist in the .vsct file)
+            OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            if ( null != mcs )
+            {
+                // Create the command for the menu item.
+                //CommandID menuCommandID = new CommandID(GuidList.guidVisualStudio_LocateInSourceControl_VSIPCmdSet, (int)PkgCmdIDList.cmdidLocateInSourceControl);
+                //MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
+                //mcs.AddCommand( menuItem );
+ 
+                // Create the command for the query status menu item.
+                CommandID queryStatusCommandID = new CommandID(GuidList.guidDynamicMenuDevelopmentCmdSetPart2, (int)PkgCmdIDList.cmdidQueryStatus);
+                MenuCommand queryStatusMenuCommand = new MenuCommand(MenuItemCallback, queryStatusCommandID);
+                mcs.AddCommand(queryStatusMenuCommand);
+                //queryStatusMenuCommand.BeforeQueryStatus += queryStatusMenuCommand_BeforeQueryStatus;
+            }
+            /* */
 		}
-		#endregion
 
+        private void queryStatusMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
+        {
+            OleMenuCommand menuCommand = sender as OleMenuCommand;
+            if (menuCommand != null)
+            {
+                /*
+                IntPtr hierarchyPtr, selectionContainerPtr;
+                uint projectItemId;
+                IVsMultiItemSelect mis;
+                IVsMonitorSelection monitorSelection = (IVsMonitorSelection)Package.GetGlobalService(typeof(SVsShellMonitorSelection));
+                monitorSelection.GetCurrentSelection(out hierarchyPtr, out projectItemId, out mis, out selectionContainerPtr);
+ 
+                IVsHierarchy hierarchy = Marshal.GetTypedObjectForIUnknown(hierarchyPtr, typeof(IVsHierarchy)) as IVsHierarchy;
+                if (hierarchy != null)
+                {
+                    object value;
+                    hierarchy.GetProperty(projectItemId, (int)__VSHPROPID.VSHPROPID_Name, out value);
+ 
+                    if (value != null && value.ToString().EndsWith(".dbml"))
+                    {
+                        menuCommand.Visible = true;
+                    }
+                    else
+                    {
+                        menuCommand.Visible = false;
+                    }
+                }
+                 */
+                string selectedPath = GetSelectedPathFromSolutionExplorer();
+                bool isVersionControlled = false;
+                try{
+                    var ws = GetWorkspaceForPath(selectedPath);
+                    if (ws != null){
+                        isVersionControlled = true;
+                    }
+                }
+                catch (Exception){
+                    isVersionControlled = false;
+                }
+                menuCommand.Enabled = isVersionControlled;
+            }
+        }
 		private UIHierarchyItem GetSelectedUIHierarchy(UIHierarchy solutionExplorer)
 		{
 			object[] objArray = solutionExplorer.SelectedItems as object[];
@@ -142,6 +205,13 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 			return localPath;
 		}
 
+        protected Workspace GetWorkspaceForPath(string localFilePath){
+			HatPackage hat = new HatPackage();
+			VersionControlServer vcServer = hat.GetVersionControlServer();
+			Workspace workspace = vcServer.GetWorkspace(localFilePath);
+            return workspace;
+        }
+
 		public void Locate(string localPath)
 		{
 
@@ -149,14 +219,12 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 			if (String.IsNullOrEmpty(localPath)) return; // Throw an exception, log to output?
 
 			HatPackage hat = new HatPackage();
-			VersionControlServer vcServer = hat.GetVersionControlServer();
 			
 			string localFilePath = localPath;
-
-			Workspace workspace = vcServer.GetWorkspace(localFilePath);
 			string serverItem = "";
 			try
 			{
+                var workspace = GetWorkspaceForPath(localFilePath);
 				serverItem = workspace.TryGetServerItemForLocalItem(localFilePath);
 			}
 			catch (Exception)
