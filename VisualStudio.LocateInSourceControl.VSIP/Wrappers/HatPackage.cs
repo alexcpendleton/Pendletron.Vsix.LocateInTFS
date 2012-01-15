@@ -36,12 +36,5 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP.Wrappers
 		{
 			return HatterasService.VersionControlServer;
 		}
-		/*
-		public VersionControlServer VersionControlServer
-		{
-			get { return _wrapped.VersionControlServer; }
-			set { _wrapped  }
-		}
-		 * */
 	}
 }

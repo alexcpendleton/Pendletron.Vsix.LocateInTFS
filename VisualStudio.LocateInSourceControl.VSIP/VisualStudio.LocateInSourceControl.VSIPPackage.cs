@@ -34,10 +34,43 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
     [ProvideAutoLoad("{f1536ef8-92ec-443c-9ed7-fdadf150da82}")]
 	public sealed class VisualStudio_LocateInSourceControl_VSIPPackage : Package
 	{
+		/// <summary>
+		/// Default constructor of the package.
+		/// Inside this method you can place any initialization code that does not require 
+		/// any Visual Studio service because at this point the package object is created but 
+		/// not sited yet inside Visual Studio environment. The place to do all the other 
+		/// initialization is the Initialize method.
+		/// </summary>
+		public VisualStudio_LocateInSourceControl_VSIPPackage()
+		{
+			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
+		}
 
+		/////////////////////////////////////////////////////////////////////////////
+		// Overriden Package Implementation
 
+		/// <summary>
+		/// Initialization of the package; this method is called right after the package is sited, so this is the place
+		/// where you can put all the initilaization code that rely on services provided by VisualStudio.
+		/// </summary>
+		protected override void Initialize()
+		{
+			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
+			base.Initialize();
+			/* */
+			// Add our command handlers for menu (commands must exist in the .vsct file)
+			OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+			if (null != mcs)
+			{
+				// Create the command for the menu item.
+				CommandID menuCommandID = new CommandID(GuidList.guidVisualStudio_LocateInSourceControl_VSIPCmdSet, (int)PkgCmdIDList.cmdidLocateInSourceControl);
+				OleMenuCommand menuItem = new OleMenuCommand(MenuItemCallback, menuCommandID);
+				menuItem.BeforeQueryStatus += new EventHandler(queryStatusMenuCommand_BeforeQueryStatus);
+				mcs.AddCommand(menuItem);
 
-		//DTE2 DTEInstance = null;
+			}
+		}
+
 		private DTE2 _dteInstance = null;
 		public DTE2 DTEInstance
 		{
@@ -53,46 +86,7 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 
 		private DTE2 GetDTEService()
 		{
-
 			return (DTE2)this.GetService(typeof(DTE));
-		}
-		/// <summary>
-		/// Default constructor of the package.
-		/// Inside this method you can place any initialization code that does not require 
-		/// any Visual Studio service because at this point the package object is created but 
-		/// not sited yet inside Visual Studio environment. The place to do all the other 
-		/// initialization is the Initialize method.
-		/// </summary>
-		public VisualStudio_LocateInSourceControl_VSIPPackage()
-		{
-			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
-		}
-
-
-
-		/////////////////////////////////////////////////////////////////////////////
-		// Overriden Package Implementation
-
-		/// <summary>
-		/// Initialization of the package; this method is called right after the package is sited, so this is the place
-		/// where you can put all the initilaization code that rely on services provided by VisualStudio.
-		/// </summary>
-		protected override void Initialize()
-		{
-			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
-			base.Initialize();
-            /* */
-			// Add our command handlers for menu (commands must exist in the .vsct file)
-			OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
-			if (null != mcs)
-			{
-				// Create the command for the menu item.
-				CommandID menuCommandID = new CommandID(GuidList.guidVisualStudio_LocateInSourceControl_VSIPCmdSet, (int)PkgCmdIDList.cmdidLocateInSourceControl);
-				OleMenuCommand menuItem = new OleMenuCommand(MenuItemCallback, menuCommandID);
-				menuItem.BeforeQueryStatus += new EventHandler(queryStatusMenuCommand_BeforeQueryStatus);
-				mcs.AddCommand(menuItem);
-                
-			}
 		}
 
         private void queryStatusMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
@@ -114,6 +108,7 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
                 menuCommand.Enabled = isVersionControlled;
             }
         }
+
 		private UIHierarchyItem GetSelectedUIHierarchy(UIHierarchy solutionExplorer)
 		{
 			object[] objArray = solutionExplorer.SelectedItems as object[];
@@ -179,7 +174,6 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 
 		public void Locate(string localPath)
 		{
-
 			// Get the first selected item? _dte.
 			if (String.IsNullOrEmpty(localPath)) return; // Throw an exception, log to output?
 
@@ -224,7 +218,6 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 		/// </summary>
 		private void MenuItemCallback(object sender, EventArgs e)
 		{
-			//Locate();
 			string selected = GetSelectedPathFromSolutionExplorer();
 			Locate(selected);
 		}

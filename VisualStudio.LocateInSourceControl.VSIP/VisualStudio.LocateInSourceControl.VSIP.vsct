@@ -107,6 +107,9 @@
 		<CommandPlacement guid="guidVisualStudio_LocateInSourceControl_VSIPCmdSet" id="MyMenuGroup" priority="0x106">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerWebSubnodeMenu"/>
 		</CommandPlacement>
+		<CommandPlacement guid="guidVisualStudio_LocateInSourceControl_VSIPCmdSet" id="MyMenuGroup" priority="0x107">
+			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerAppDesignerFolderMenu"/>
+		</CommandPlacement>
 	</CommandPlacements>
 	<Symbols>		
 		<!-- This is the package guid. -->
@@ -130,10 +133,11 @@ NameLoc = Item/Folder/Project/Solution
 			<IDSymbol name="menuidSolutionExplorerWebFolderMenu" value="1137"/>
 			<IDSymbol name="menuidSolutionExplorerWebItemMenu" value="1138"/>
 			<IDSymbol name="menuidSolutionExplorerWebSubnodeMenu" value="1140"/>
+			<IDSymbol name="menuidSolutionExplorerAppDesignerFolderMenu" value="1107"/>
 			<IDSymbol name="cmdidLocateInSourceControl" value="0x0100" />
 			<!--
-CmdID = 1072/1073/1026/1043/1136/1138
-NameLoc = Item/Folder/Project/Solution/Web Project Folder/Web Item
+CmdID = 1072/1073/1026/1043/1136/1137/1138/1107
+NameLoc = Item/Folder/Project/Solution/Web Project Folder/Web Folder/Web Item/App Designer Folder
 -->
 		</GuidSymbol>
 
