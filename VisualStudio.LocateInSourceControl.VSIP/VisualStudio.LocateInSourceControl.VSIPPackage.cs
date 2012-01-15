@@ -1,24 +1,14 @@
 ﻿using System;
+using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Globalization;
+using System.Reflection;
 using System.Runtime.InteropServices;
-using System.ComponentModel.Design;
-using Microsoft.Win32;
-using Microsoft.VisualStudio;
+using AlexPendleton.VisualStudio_LocateInSourceControl_VSIP.Wrappers;
 using EnvDTE;
 using EnvDTE80;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using System.Collections;
-using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.TeamFoundation.VersionControl.Client;
-using Microsoft.VisualStudio.TeamFoundation;
-using Microsoft.TeamFoundation.Client;
-using Microsoft.VisualStudio.TeamFoundation;
-using System.Reflection;
-using AlexPendleton.VisualStudio_LocateInSourceControl_VSIP.Wrappers;
+using Microsoft.VisualStudio.Shell;
 
 namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 {
@@ -41,12 +31,31 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 	// This attribute is needed to let the shell know that this package exposes some menus.
 	[ProvideMenuResource("Menus.ctmenu", 1)]
 	[Guid(GuidList.guidVisualStudio_LocateInSourceControl_VSIPPkgString)]
+    [ProvideAutoLoad("{f1536ef8-92ec-443c-9ed7-fdadf150da82}")]
 	public sealed class VisualStudio_LocateInSourceControl_VSIPPackage : Package
 	{
 
 
 
-		DTE2 _dte = null;
+		//DTE2 DTEInstance = null;
+		private DTE2 _dteInstance = null;
+		public DTE2 DTEInstance
+		{
+			get {
+				if (_dteInstance == null)
+				{
+					_dteInstance = GetDTEService();
+				}
+				return _dteInstance;
+			}
+			set { _dteInstance = value; }
+		}
+
+		private DTE2 GetDTEService()
+		{
+
+			return (DTE2)this.GetService(typeof(DTE));
+		}
 		/// <summary>
 		/// Default constructor of the package.
 		/// Inside this method you can place any initialization code that does not require 
@@ -63,7 +72,6 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 
 		/////////////////////////////////////////////////////////////////////////////
 		// Overriden Package Implementation
-		#region Package Members
 
 		/// <summary>
 		/// Initialization of the package; this method is called right after the package is sited, so this is the place
@@ -73,19 +81,39 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 		{
 			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
 			base.Initialize();
-
+            /* */
 			// Add our command handlers for menu (commands must exist in the .vsct file)
 			OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
 			if (null != mcs)
 			{
 				// Create the command for the menu item.
 				CommandID menuCommandID = new CommandID(GuidList.guidVisualStudio_LocateInSourceControl_VSIPCmdSet, (int)PkgCmdIDList.cmdidLocateInSourceControl);
-				MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID);
+				OleMenuCommand menuItem = new OleMenuCommand(MenuItemCallback, menuCommandID);
+				menuItem.BeforeQueryStatus += new EventHandler(queryStatusMenuCommand_BeforeQueryStatus);
 				mcs.AddCommand(menuItem);
+                
 			}
 		}
-		#endregion
 
+        private void queryStatusMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
+        {
+            OleMenuCommand menuCommand = sender as OleMenuCommand;
+            if (menuCommand != null)
+            {
+                string selectedPath = GetSelectedPathFromSolutionExplorer();
+                bool isVersionControlled = false;
+                try{
+                    var ws = GetWorkspaceForPath(selectedPath);
+                    if (ws != null){
+                        isVersionControlled = true;
+                    }
+                }
+                catch (Exception){
+                    isVersionControlled = false;
+                }
+                menuCommand.Enabled = isVersionControlled;
+            }
+        }
 		private UIHierarchyItem GetSelectedUIHierarchy(UIHierarchy solutionExplorer)
 		{
 			object[] objArray = solutionExplorer.SelectedItems as object[];
@@ -109,7 +137,7 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 				if (item.Project == null)
 				{
 					// If there's no ProjectItem and no Project then it's (probably?) the solution
-					result = _dte.Solution.FullName;
+					result = DTEInstance.Solution.FullName;
 				}
 				else
 				{
@@ -128,9 +156,9 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 		public string GetSelectedPathFromSolutionExplorer()
 		{
 			string localPath = "";
-			if (_dte.SelectedItems != null && _dte.SelectedItems.Count > 0)
+			if (DTEInstance.SelectedItems != null && DTEInstance.SelectedItems.Count > 0)
 			{
-				foreach (SelectedItem item in _dte.SelectedItems)
+				foreach (SelectedItem item in DTEInstance.SelectedItems)
 				{
 					localPath = GetLocalPath(item);
 					if (!String.IsNullOrWhiteSpace(localPath))
@@ -142,6 +170,13 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 			return localPath;
 		}
 
+        protected Workspace GetWorkspaceForPath(string localFilePath){
+			HatPackage hat = new HatPackage();
+			VersionControlServer vcServer = hat.GetVersionControlServer();
+			Workspace workspace = vcServer.GetWorkspace(localFilePath);
+            return workspace;
+        }
+
 		public void Locate(string localPath)
 		{
 
@@ -149,14 +184,12 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 			if (String.IsNullOrEmpty(localPath)) return; // Throw an exception, log to output?
 
 			HatPackage hat = new HatPackage();
-			VersionControlServer vcServer = hat.GetVersionControlServer();
 			
 			string localFilePath = localPath;
-
-			Workspace workspace = vcServer.GetWorkspace(localFilePath);
 			string serverItem = "";
 			try
 			{
+                var workspace = GetWorkspaceForPath(localFilePath);
 				serverItem = workspace.TryGetServerItemForLocalItem(localFilePath);
 			}
 			catch (Exception)
@@ -168,7 +201,7 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 				Assembly tfsVC = Assembly.Load("Microsoft.VisualStudio.TeamFoundation.VersionControl");
 				//Type t = tfsVC.GetType("Microsoft.VisualStudio.TeamFoundation.VersionControl.HatPackage");
 				// if the tool window hasn't been opened yet "explorer" will be null, so we make sure it has opened at least once via ExecuteCommand
-				_dte.ExecuteCommand("View.TfsSourceControlExplorer");
+				DTEInstance.ExecuteCommand("View.TfsSourceControlExplorer");
 				Type explorer = tfsVC.GetType("Microsoft.VisualStudio.TeamFoundation.VersionControl.ToolWindowSccExplorer");
 
 				var prop = explorer.GetProperty("Instance", BindingFlags.NonPublic | BindingFlags.Static);
@@ -191,7 +224,6 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 		/// </summary>
 		private void MenuItemCallback(object sender, EventArgs e)
 		{
-			_dte = (DTE2)this.GetService(typeof(DTE));
 			//Locate();
 			string selected = GetSelectedPathFromSolutionExplorer();
 			Locate(selected);

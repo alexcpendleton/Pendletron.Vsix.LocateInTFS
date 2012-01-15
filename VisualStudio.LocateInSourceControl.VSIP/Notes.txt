@@ -1,0 +1,5 @@
+File/folder/project/Solution/Web Project Folder/Web Item context menu: 
+{D309F791-903F-11D0-9EFC-00A0C911004F}
+GuidID = 3
+CmdID = 1072/1073/1026/1043/1136/1138
+NameLoc = Item/Folder/Project/Solution/Web Project Folder/Web Item
