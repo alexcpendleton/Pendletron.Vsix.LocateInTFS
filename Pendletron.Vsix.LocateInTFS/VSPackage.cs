@@ -4,13 +4,13 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using AlexPendleton.VisualStudio_LocateInSourceControl_VSIP.Wrappers;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.VisualStudio.Shell;
+using Pendletron.Vsix.Core.Wrappers;
 
-namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
+namespace Pendletron.Vsix.LocateInTFS
 {
 	/// <summary>
 	/// This is the class that implements the package exposed by this assembly.
@@ -30,9 +30,9 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 	[InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
 	// This attribute is needed to let the shell know that this package exposes some menus.
 	[ProvideMenuResource("Menus.ctmenu", 1)]
-	[Guid(GuidList.guidVisualStudio_LocateInSourceControl_VSIPPkgString)]
+	[Guid(GuidList.guidVisualStudio_LocateInTFS_VSIPPkgString)]
     [ProvideAutoLoad("{f1536ef8-92ec-443c-9ed7-fdadf150da82}")]
-	public sealed class VisualStudio_LocateInSourceControl_VSIPPackage : Package
+	public sealed class VisualStudio_LocateInTFS_VSIPPackage : Package
 	{
 		/// <summary>
 		/// Default constructor of the package.
@@ -41,7 +41,7 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 		/// not sited yet inside Visual Studio environment. The place to do all the other 
 		/// initialization is the Initialize method.
 		/// </summary>
-		public VisualStudio_LocateInSourceControl_VSIPPackage()
+		public VisualStudio_LocateInTFS_VSIPPackage()
 		{
 			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
 		}
@@ -63,10 +63,13 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
 			if (null != mcs)
 			{
 				// Create the command for the menu item.
-				CommandID menuCommandID = new CommandID(GuidList.guidVisualStudio_LocateInSourceControl_VSIPCmdSet, (int)PkgCmdIDList.cmdidLocateInSourceControl);
+				CommandID menuCommandID = new CommandID(GuidList.guidVisualStudio_LocateInTFS_VSIPCmdSet, (int)PkgCmdIDList.cmdidLocateInTFS);
+				
 				OleMenuCommand menuItem = new OleMenuCommand(MenuItemCallback, menuCommandID);
+				
 				menuItem.BeforeQueryStatus += new EventHandler(queryStatusMenuCommand_BeforeQueryStatus);
 				mcs.AddCommand(menuItem);
+				
 
 			}
 		}
@@ -92,6 +95,7 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
         private void queryStatusMenuCommand_BeforeQueryStatus(object sender, EventArgs e)
         {
             OleMenuCommand menuCommand = sender as OleMenuCommand;
+			
             if (menuCommand != null)
             {
                 string selectedPath = GetSelectedPathFromSolutionExplorer();
@@ -105,7 +109,8 @@ namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP
                 catch (Exception){
                     isVersionControlled = false;
                 }
-                menuCommand.Enabled = isVersionControlled;
+
+                menuCommand.Visible = isVersionControlled;
             }
         }
 

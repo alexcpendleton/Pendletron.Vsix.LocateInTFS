@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Vsix Version="1.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2010">
-  <Identifier Id="8c5666d6-b02c-4ee9-baaa-f041a7003cc3">
-    <Name>VSPackage1</Name>
-    <Author>Genco</Author>
+  <Identifier Id="c7a20a99-596c-4c6a-9485-773a1798560a">
+    <Name>ToggleShowDeletedItems.VSIP</Name>
+    <Author>AlexPendleton</Author>
     <Version>1.0</Version>
-    <Description xml:space="preserve">Information about my package</Description>
+    <Description xml:space="preserve">Adds a Toggle Show Deleted Items button on the source control explorer window to easily switch between seeing deleted items</Description>
     <Locale>1033</Locale>
     <InstalledByMsi>false</InstalledByMsi>
     <SupportedProducts>

@@ -7,11 +7,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("VSPackage1")]
+[assembly: AssemblyTitle("VisualStudio.LocateInTFS.VSIP")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Genco")]
-[assembly: AssemblyProduct("VSPackage1")]
+[assembly: AssemblyCompany("Alex Pendleton")]
+[assembly: AssemblyProduct("VisualStudio.LocateInTFS.VSIP")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]   

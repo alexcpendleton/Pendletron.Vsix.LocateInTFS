@@ -23,12 +23,9 @@
 	<!--Definition of some VSCT specific constants. In this sample we use it for the IDs inside the guidOfficeIcon group. -->
 	<Extern href="msobtnid.h"/>
 
-
-
-
 	<!--The Commands section is where we the commands, menus and menu groups are defined.
       This section uses a Guid to identify the package that provides the command defined inside it. -->
-	<Commands package="guidVisualStudio_LocateInSourceControl_VSIPPkg">
+	<Commands package="guidVisualStudio_LocateInTFS_VSIPPkg">
 		<!-- Inside this section we have different sub-sections: one for the menus, another  
     for the menu groups, one for the buttons (the actual commands), one for the combos 
     and the last one for the bitmaps used. Each element is identified by a command id that  
@@ -44,9 +41,9 @@
          must be a menu. -->
 		<Groups>
 
-			<Group guid="guidVisualStudio_LocateInSourceControl_VSIPCmdSet" id="MyMenuGroup" priority="0x0600">
+			<Group guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x0600">
 				<!--<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>-->
-				<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerItemMenu"/>				
+				<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerItemMenu"/>
 			</Group>
 		</Groups>
 
@@ -62,12 +59,14 @@
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node or set it to <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
 -->
-			<Button guid="guidVisualStudio_LocateInSourceControl_VSIPCmdSet" id="cmdidLocateInSourceControl" priority="0x0100" type="Button">
-				<Parent guid="guidVisualStudio_LocateInSourceControl_VSIPCmdSet" id="MyMenuGroup" />
+			<Button guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="cmdidLocateInTFS" priority="0x0100" type="Button">
+				<Parent guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" />
 				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
-					<CommandName>cmdidLocateInSourceControl</CommandName>
+					<CommandName>cmdidLocateInTFS</CommandName>
 					<ButtonText>Locate In TFS</ButtonText>
+					
+					
 				</Strings>
 			</Button>
 		</Buttons>
@@ -86,43 +85,44 @@
 
 	</Commands>
 	<CommandPlacements>
-		<CommandPlacement guid="guidVisualStudio_LocateInSourceControl_VSIPCmdSet" id="MyMenuGroup" priority="0x100">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x100">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerFolderMenu"/>			
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInSourceControl_VSIPCmdSet" id="MyMenuGroup" priority="0x101">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x101">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerProjectMenu"/>
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInSourceControl_VSIPCmdSet" id="MyMenuGroup" priority="0x102">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x102">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerSolutionMenu"/>
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInSourceControl_VSIPCmdSet" id="MyMenuGroup" priority="0x103">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x103">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerWebProjectMenu"/>
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInSourceControl_VSIPCmdSet" id="MyMenuGroup" priority="0x104">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x104">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerWebFolderMenu"/>
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInSourceControl_VSIPCmdSet" id="MyMenuGroup" priority="0x105">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x105">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerWebItemMenu"/>
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInSourceControl_VSIPCmdSet" id="MyMenuGroup" priority="0x106">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x106">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerWebSubnodeMenu"/>
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInSourceControl_VSIPCmdSet" id="MyMenuGroup" priority="0x107">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x107">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerAppDesignerFolderMenu"/>
 		</CommandPlacement>
 	</CommandPlacements>
+	
 	<Symbols>		
 		<!-- This is the package guid. -->
-		<GuidSymbol name="guidVisualStudio_LocateInSourceControl_VSIPPkg" value="{8e7c7ec6-736b-42a6-8a02-301d0f80a1f3}" />
+		<GuidSymbol name="guidVisualStudio_LocateInTFS_VSIPPkg" value="{8e7c7ec6-736b-42a6-8a02-301d0f80a1f3}" />
 <!--
 		
 CmdID = 1072/1073/1026/1043
 NameLoc = Item/Folder/Project/Solution
 		-->
 		<!-- This is the guid used to group the menu commands together -->
-		<GuidSymbol name="guidVisualStudio_LocateInSourceControl_VSIPCmdSet" value="{19dabbc7-d73f-48a0-ad3a-582e0349ce21}">
+		<GuidSymbol name="guidVisualStudio_LocateInTFS_VSIPCmdSet" value="{19dabbc7-d73f-48a0-ad3a-582e0349ce21}">
 			<IDSymbol name="MyMenuGroup" value="0x1020" />
-			<IDSymbol name="cmdidLocateInSourceControl" value="0x0100" />
+			<IDSymbol name="cmdidLocateInTFS" value="0x0100" />
 		</GuidSymbol>
 		<GuidSymbol name="guidSolutionExplorerMenu" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">
 			<IDSymbol name="menuidSolutionExplorerItemMenu" value="1072" />
@@ -134,7 +134,7 @@ NameLoc = Item/Folder/Project/Solution
 			<IDSymbol name="menuidSolutionExplorerWebItemMenu" value="1138"/>
 			<IDSymbol name="menuidSolutionExplorerWebSubnodeMenu" value="1140"/>
 			<IDSymbol name="menuidSolutionExplorerAppDesignerFolderMenu" value="1107"/>
-			<IDSymbol name="cmdidLocateInSourceControl" value="0x0100" />
+			<IDSymbol name="cmdidLocateInTFS" value="0x0100" />
 			<!--
 CmdID = 1072/1073/1026/1043/1136/1137/1138/1107
 NameLoc = Item/Folder/Project/Solution/Web Project Folder/Web Folder/Web Item/App Designer Folder

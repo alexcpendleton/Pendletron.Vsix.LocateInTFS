@@ -5,7 +5,7 @@ using System.Text;
 using System.Reflection;
 using Microsoft.TeamFoundation.VersionControl.Client;
 
-namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP.Wrappers
+namespace Pendletron.Vsix.Core.Wrappers
 {
 	public class HatPackage 
 	{

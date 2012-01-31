@@ -5,7 +5,7 @@ using System.Text;
 using System.Dynamic;
 using System.Reflection;
 
-namespace AlexPendleton.VisualStudio_LocateInSourceControl_VSIP.Wrappers
+namespace Pendletron.Vsix.Core.Wrappers
 {
 	/// <summary>
 	/// A 10 minute wrapper to access private members, havn't tested in detail.
