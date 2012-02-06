@@ -1,7 +1,7 @@
 # Locate in TFS (Team Foundation Server)
 
 ### >> [Download the .vsix](https://github.com/alexcpendleton/Pendletron.Vsix/blob/master/bin/Pendletron.Vsix.LocateInTFS.vsix?raw=true) <<
-### >> [On the Visual Studio Gallery](http://visualstudiogallery.msdn.microsoft.com/ad32dab8-c42b-466e-9c59-86f62a3274ce) <<
+### >> [On the Visual Studio Gallery](http://visualstudiogallery.msdn.microsoft.com/5cc44f63-4ea8-4c17-8aa4-95037a2d32ef) <<
 
 This Visual Studio extension will open up the Source Control Explorer with the location of the currently-selected item in the Solution Explorer. It has been tested only with **Visual Studio 2010** and **TFS 2010**.
 
