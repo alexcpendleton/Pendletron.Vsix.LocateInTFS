@@ -153,6 +153,24 @@ namespace Pendletron.Vsix.LocateInTFS
 			return result;
 		}
 
+		public string GetSelectedPathFromActiveDocument()
+		{
+			if (DTEInstance.ActiveDocument != null)
+			{
+				return DTEInstance.ActiveDocument.Path;
+			}
+			return "";
+		}
+
+		public void ActiveDocumentCallback(object sender, EventArgs e)
+		{
+			string path = GetSelectedPathFromActiveDocument();
+			if (!String.IsNullOrEmpty(path))
+			{
+				Locate(path);
+			}
+		}
+
 		public string GetSelectedPathFromSolutionExplorer()
 		{
 			string localPath = "";
