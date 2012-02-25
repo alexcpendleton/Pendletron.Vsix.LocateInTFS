@@ -69,8 +69,37 @@ namespace Pendletron.Vsix.LocateInTFS
 				
 				menuItem.BeforeQueryStatus += new EventHandler(queryStatusMenuCommand_BeforeQueryStatus);
 				mcs.AddCommand(menuItem);
-				
 
+				CommandID codewindow_menuCommandID = new CommandID(GuidList.guidVisualStudio_LocateInTFS_VSIPCmdSet, (int)PkgCmdIDList.cmdidLocateInTFS_CodeWindow);
+				OleMenuCommand codewindow_menuItem = new OleMenuCommand(ActiveDocumentCallback, codewindow_menuCommandID);
+				mcs.AddCommand(codewindow_menuItem);
+
+			}
+		}
+
+		public void activeDocument_BeforeQueryStatus(object sender, EventArgs e)
+		{
+
+			OleMenuCommand menuCommand = sender as OleMenuCommand;
+
+			if (menuCommand != null)
+			{
+				string selectedPath = GetSelectedPathFromActiveDocument();
+				bool isVersionControlled = false;
+				try
+				{
+					var ws = GetWorkspaceForPath(selectedPath);
+					if (ws != null)
+					{
+						isVersionControlled = true;
+					}
+				}
+				catch (Exception)
+				{
+					isVersionControlled = false;
+				}
+
+				menuCommand.Visible = isVersionControlled;
 			}
 		}
 
