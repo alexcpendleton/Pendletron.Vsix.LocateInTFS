@@ -119,7 +119,11 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ActiveWindowLocateCommand.cs" />
+    <Compile Include="Commands\LocateCommand.cs" />
+    <Compile Include="Commands\SolutionExplorerLocateCommand.cs" />
     <Compile Include="Guids.cs" />
+    <Compile Include="LocationService.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

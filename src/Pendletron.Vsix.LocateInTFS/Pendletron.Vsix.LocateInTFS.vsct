@@ -77,7 +77,7 @@
 				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
 					<CommandName>cmdidLocateInTFS_CodeWindow</CommandName>
-					<ButtonText>Locate In TFS 2</ButtonText>
+					<ButtonText>Locate In TFS</ButtonText>
 				</Strings>
 			</Button>
 		</Buttons>
