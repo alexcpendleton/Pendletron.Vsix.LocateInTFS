@@ -41,14 +41,14 @@
          must be a menu. -->
 		<Groups>
 
-			<Group guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x0600">
+			<Group guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="SolutionExplorerMenusGroup" priority="0x0600">
 				<!--<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>-->
 				<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerItemMenu"/>
 			</Group>
 
-			<Group guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="CodeWindowMenus" priority="0x0601">
+			<Group guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="CodeWindowMenusGroup" priority="0x0601">
 				<!--<Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS"/>
-				<Parent guid="guidCodeWindowMenus" id="menuidCodeWindowContextMenu"/>-->
+				<Parent guid="guidCodeWindowMenusGroup" id="menuidCodeWindowContextMenu"/>-->
 			</Group>
 		</Groups>
 
@@ -64,16 +64,16 @@
               <CommandFlag>DynamicVisibility</CommandFlag>
           If you do not want an image next to your command, remove the Icon node or set it to <Icon guid="guidOfficeIcon" id="msotcidNoIcon" />
 -->
-			<Button guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="cmdidLocateInTFS" priority="0x0100" type="Button">
-				<Parent guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" />
+			<Button guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="cmdidLocateInTFS_SolutionExplorer" priority="0x0100" type="Button">
+				<Parent guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="SolutionExplorerMenusGroup" />
 				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
-					<CommandName>cmdidLocateInTFS</CommandName>
+					<CommandName>cmdidLocateInTFS_SolutionExplorer</CommandName>
 					<ButtonText>Locate In TFS</ButtonText>
 				</Strings>
 			</Button>
 			<Button guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="cmdidLocateInTFS_CodeWindow" priority="0x0100" type="Button">
-				<Parent guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="CodeWindowMenus" />
+				<Parent guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="CodeWindowMenusGroup" />
 				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
 					<CommandName>cmdidLocateInTFS_CodeWindow</CommandName>
@@ -96,37 +96,37 @@
 
 	</Commands>
 	<CommandPlacements>
-		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x100">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="SolutionExplorerMenusGroup" priority="0x100">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerFolderMenu"/>			
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x101">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="SolutionExplorerMenusGroup" priority="0x101">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerProjectMenu"/>
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x102">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="SolutionExplorerMenusGroup" priority="0x102">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerSolutionMenu"/>
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x103">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="SolutionExplorerMenusGroup" priority="0x103">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerWebProjectMenu"/>
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x104">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="SolutionExplorerMenusGroup" priority="0x104">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerWebFolderMenu"/>
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x105">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="SolutionExplorerMenusGroup" priority="0x105">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerWebItemMenu"/>
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x106">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="SolutionExplorerMenusGroup" priority="0x106">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerWebSubnodeMenu"/>
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="MyMenuGroup" priority="0x107">
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="SolutionExplorerMenusGroup" priority="0x107">
 			<Parent guid="guidSolutionExplorerMenu" id="menuidSolutionExplorerAppDesignerFolderMenu"/>
 		</CommandPlacement>
 		
 		
-		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="CodeWindowMenus" priority="0x100">
-			<Parent guid="guidCodeWindowMenus" id="menuidCodeWindowContextMenu"/>
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="CodeWindowMenusGroup" priority="0x100">
+			<Parent guid="guidCodeWindowMenusGroup" id="menuidCodeWindowContextMenu"/>
 		</CommandPlacement>
-		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="CodeWindowMenus" priority="0x100">
-			<Parent guid="guidCodeWindowMenus" id="menuidEasyMdiContextMenu"/>
+		<CommandPlacement guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="CodeWindowMenusGroup" priority="0x100">
+			<Parent guid="guidCodeWindowMenusGroup" id="menuidEasyMdiContextMenu"/>
 		</CommandPlacement>
 	</CommandPlacements>
 	
@@ -140,9 +140,9 @@ NameLoc = Item/Folder/Project/Solution
 		-->
 		<!-- This is the guid used to group the menu commands together -->
 		<GuidSymbol name="guidVisualStudio_LocateInTFS_VSIPCmdSet" value="{19dabbc7-d73f-48a0-ad3a-582e0349ce21}">
-			<IDSymbol name="MyMenuGroup" value="0x1020" />
-			<IDSymbol name="CodeWindowMenus" value="0x1030" />
-			<IDSymbol name="cmdidLocateInTFS" value="0x0100" />
+			<IDSymbol name="SolutionExplorerMenusGroup" value="0x1020" />
+			<IDSymbol name="CodeWindowMenusGroup" value="0x1030" />
+			<IDSymbol name="cmdidLocateInTFS_SolutionExplorer" value="0x0100" />
 			<IDSymbol name="cmdidLocateInTFS_CodeWindow" value="0x0110" />
 		</GuidSymbol>
 		<GuidSymbol name="guidSolutionExplorerMenu" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">
@@ -156,13 +156,13 @@ NameLoc = Item/Folder/Project/Solution
 			<IDSymbol name="menuidSolutionExplorerWebSubnodeMenu" value="1140"/>
 			<IDSymbol name="menuidSolutionExplorerAppDesignerFolderMenu" value="1107"/>
 
-			<IDSymbol name="cmdidLocateInTFS" value="0x0100" />
+			<IDSymbol name="cmdidLocateInTFS_SolutionExplorer" value="0x0100" />
 			<!--
 CmdID = 1072/1073/1026/1043/1136/1137/1138/1107
 NameLoc = Item/Folder/Project/Solution/Web Project Folder/Web Folder/Web Item/App Designer Folder
 -->
 		</GuidSymbol>
-		<GuidSymbol name="guidCodeWindowMenus" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">
+		<GuidSymbol name="guidCodeWindowMenusGroup" value="{D309F791-903F-11D0-9EFC-00A0C911004F}">
 
 			<IDSymbol name="menuidCodeWindowContextMenu" value="1037"/>
 			<IDSymbol name="menuidEasyMdiContextMenu" value="1067"/>

@@ -6,7 +6,7 @@ namespace Pendletron.Vsix.LocateInTFS.Commands
 
 		protected override int CommandID
 		{
-			get { return (int) PkgCmdIDList.cmdidLocateInTFS; }
+			get { return (int) PkgCmdIDList.cmdidLocateInTFS_SolutionExplorer; }
 		}
 		public override string GetSelectedLocalPath()
 		{
