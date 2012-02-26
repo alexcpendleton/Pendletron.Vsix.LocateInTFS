@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.Shell;
 using Pendletron.Vsix.Core.Wrappers;
 using Pendletron.Vsix.LocateInTFS.Commands;
 using System.Collections.Generic;
+using Microsoft.TeamFoundation.Client;
 
 namespace Pendletron.Vsix.LocateInTFS
 {
@@ -128,10 +129,39 @@ namespace Pendletron.Vsix.LocateInTFS
 
 		protected Workspace GetWorkspaceForPath(string localFilePath)
 		{
+			Workspace workspace = GetWorkspaceForNonSolutionPath(localFilePath);
+			if (workspace == null)
+			{
+				// Not a file from this solution, get it another way
+				workspace = GetWorkspaceForNonSolutionPath(localFilePath);
+			}
+			return workspace;
+		}
+
+		protected Workspace GetWorkspaceForSolutionPath(string localFilePath)
+		{
 			HatPackage hat = new HatPackage();
 			VersionControlServer vcServer = hat.GetVersionControlServer();
 			Workspace workspace = vcServer.GetWorkspace(localFilePath);
 			return workspace;
+		}
+
+		protected Workspace GetWorkspaceForNonSolutionPath(string localFilePath)
+		{
+			Workstation station = Workstation.Current;
+			Workspace result = null;
+			if (station != null)
+			{
+				var wsInfo = station.GetLocalWorkspaceInfo(localFilePath);
+				using(var collection = new TfsTeamProjectCollection(wsInfo.ServerUri))
+				{
+					if (collection != null)
+					{
+						result = wsInfo.GetWorkspace(collection);
+					}
+				}
+			}
+			return result;
 		}
 
 		private Assembly _tfsVersionControlAssembly = null;

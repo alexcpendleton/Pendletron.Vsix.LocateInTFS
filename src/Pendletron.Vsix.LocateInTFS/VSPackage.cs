@@ -26,6 +26,7 @@ namespace Pendletron.Vsix.LocateInTFS
 	[ProvideMenuResource("Menus.ctmenu", 1)]
 	[Guid(GuidList.guidVisualStudio_LocateInTFS_VSIPPkgString)]
     [ProvideAutoLoad("{f1536ef8-92ec-443c-9ed7-fdadf150da82}")]
+	[ProvideAutoLoad("{8fe2df1d-e0da-4ebe-9d5c-415d40e487b5}")]
 	public sealed class VisualStudio_LocateInTFS_VSIPPackage : Package
 	{
 		/// <summary>
