@@ -34,11 +34,12 @@ namespace Pendletron.Vsix.LocateInTFS
 			bool isVersionControlled = false;
 			try
 			{
-				var ws = GetWorkspaceForPath(selectedPath);
-				if (ws != null)
+				GetWorkspaceForPath(selectedPath, ws =>
 				{
-					isVersionControlled = true;
-				}
+					if (ws != null) {
+						isVersionControlled = true;
+					}
+				});
 			}
 			catch (Exception)
 			{
@@ -95,7 +96,16 @@ namespace Pendletron.Vsix.LocateInTFS
 			else
 			{
 				//Just selected a file
-				result = item.ProjectItem.get_FileNames(0);
+				// Regular items in a project seem to be zero-based
+				// Items inside of solution folders seem to be one-based...
+				try
+				{
+					result = item.ProjectItem.get_FileNames(0);
+				}
+				catch(ArgumentException)
+				{
+					result = item.ProjectItem.get_FileNames(1);
+				}
 			}
 			return result;
 		}
@@ -127,15 +137,27 @@ namespace Pendletron.Vsix.LocateInTFS
 			return localPath;
 		}
 
-		protected Workspace GetWorkspaceForPath(string localFilePath)
+		protected void GetWorkspaceForPath(string localFilePath, Action<Workspace> ifFound)
 		{
-			Workspace workspace = GetWorkspaceForNonSolutionPath(localFilePath);
+			// Needed to change this to use a callback because if it's a non-solution 
+			// path then the TFS collection gets disposed
+			Workspace workspace = null;
+			try
+			{
+				// TODO: Should probably check if solution is connected to TFS instead of wrapping
+				// this in a try/catch
+				workspace = GetWorkspaceForSolutionPath(localFilePath);
+			} catch(Exception) { }
+
 			if (workspace == null)
 			{
-				// Not a file from this solution, get it another way
-				workspace = GetWorkspaceForNonSolutionPath(localFilePath);
+				// Not a file from  this solution, get it another way
+				GetWorkspaceForNonSolutionPath(localFilePath, ifFound);
 			}
-			return workspace;
+			else
+			{
+				ifFound(workspace);
+			}
 		}
 
 		protected Workspace GetWorkspaceForSolutionPath(string localFilePath)
@@ -146,7 +168,7 @@ namespace Pendletron.Vsix.LocateInTFS
 			return workspace;
 		}
 
-		protected Workspace GetWorkspaceForNonSolutionPath(string localFilePath)
+		protected void GetWorkspaceForNonSolutionPath(string localFilePath, Action<Workspace> ifFound)
 		{
 			Workstation station = Workstation.Current;
 			Workspace result = null;
@@ -158,10 +180,13 @@ namespace Pendletron.Vsix.LocateInTFS
 					if (collection != null)
 					{
 						result = wsInfo.GetWorkspace(collection);
+						if (result != null)
+						{
+							ifFound(result);
+						}
 					}
 				}
 			}
-			return result;
 		}
 
 		private Assembly _tfsVersionControlAssembly = null;
@@ -183,10 +208,10 @@ namespace Pendletron.Vsix.LocateInTFS
 
 			string localFilePath = localPath;
 			string serverItem = "";
-			try
-			{
-				var workspace = GetWorkspaceForPath(localFilePath);
-				serverItem = workspace.TryGetServerItemForLocalItem(localFilePath);
+			try {
+				GetWorkspaceForPath(localFilePath, workspace => {
+					serverItem = workspace.TryGetServerItemForLocalItem(localFilePath);
+				});
 			}
 			catch (Exception) { }
 
