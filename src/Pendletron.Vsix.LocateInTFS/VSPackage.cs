@@ -52,14 +52,11 @@ namespace Pendletron.Vsix.LocateInTFS
 		/// </summary>
 		protected override void Initialize()
 		{
-			if (!_initialized)
-			{
-				_initialized = true;
-				Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
-				base.Initialize();
-				var packageService = DeriveLocationServiceByVisualStudioVersion();
-				packageService.Initialize();
-			}
+			_initialized = true;
+			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
+			base.Initialize();
+			var packageService = DeriveLocationServiceByVisualStudioVersion();
+			packageService.Initialize();
 		}
 
 		protected ITfsLocater DeriveLocationServiceByVisualStudioVersion()

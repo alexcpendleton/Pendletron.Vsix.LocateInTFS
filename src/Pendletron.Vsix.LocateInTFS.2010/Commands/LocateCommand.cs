@@ -20,8 +20,12 @@ namespace Pendletron.Vsix.LocateInTFS.Commands
 
 		protected virtual void AddToMenuCommandService(OleMenuCommand cmd)
 		{
-			dynamic mcs = Package.GetServiceAsDynamic(typeof(IMenuCommandService));
-			mcs.AddCommand(cmd);
+			IMenuCommandService mcs = (IMenuCommandService)Package.GetServiceAsDynamic(typeof(IMenuCommandService));
+			var found = mcs.FindCommand(cmd.CommandID);
+			if (found == null)
+			{
+				mcs.AddCommand(cmd);
+			}
 		}
 
 		public virtual void RegisterCommand()
