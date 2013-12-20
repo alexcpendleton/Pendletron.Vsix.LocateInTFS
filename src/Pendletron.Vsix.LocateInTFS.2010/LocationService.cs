@@ -9,22 +9,23 @@ using Pendletron.Vsix.Core.Wrappers;
 using Pendletron.Vsix.LocateInTFS.Commands;
 using System.Collections.Generic;
 using Microsoft.TeamFoundation.Client;
+using Pendletron.Vsix.Core;
 
 namespace Pendletron.Vsix.LocateInTFS
 {
-	public class LocationService
+	public class LocationService : ITfsLocater
 	{
-		public LocationService(VisualStudio_LocateInTFS_VSIPPackage pkg)
+		public LocationService(ILocateInTfsVsPackage pkg)
 		{
 			Package = pkg;
 		}
 
-		public VisualStudio_LocateInTFS_VSIPPackage Package { get; set; }
+		public ILocateInTfsVsPackage Package { get; set; }
 
 		public void Initialize()
 		{
-			var solutionExplorerCommand = new SolutionExplorerLocateCommand(this);
-			var activeWindowCommand = new ActiveWindowLocateCommand(this);
+			var solutionExplorerCommand = new SolutionExplorerLocateCommand(this, Package);
+			var activeWindowCommand = new ActiveWindowLocateCommand(this, Package);
 			solutionExplorerCommand.RegisterCommand();
 			activeWindowCommand.RegisterCommand();
 		}
@@ -64,7 +65,7 @@ namespace Pendletron.Vsix.LocateInTFS
 
 		private DTE2 GetDTEService()
 		{
-			return Package.GetService<DTE2>(typeof(DTE));
+			return Package.GetServiceAsDynamic(typeof(DTE)) as DTE2;
 		}
 
 		public UIHierarchyItem GetSelectedUIHierarchy(UIHierarchy solutionExplorer)

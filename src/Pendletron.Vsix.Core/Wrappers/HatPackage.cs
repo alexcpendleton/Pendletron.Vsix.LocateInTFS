@@ -32,7 +32,7 @@ namespace Pendletron.Vsix.Core.Wrappers
 			set { _hatterasService = value; }
 		}
 
-		public VersionControlServer GetVersionControlServer()
+		public dynamic GetVersionControlServer()
 		{
 			return HatterasService.VersionControlServer;
 		}

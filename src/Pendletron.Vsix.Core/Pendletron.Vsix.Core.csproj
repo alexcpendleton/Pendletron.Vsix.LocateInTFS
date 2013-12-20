@@ -46,9 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ILocateInTfsVsPackage.cs" />
+    <Compile Include="IVsPackageIdentifiers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Wrappers\AccessPrivateWrapper.cs" />
     <Compile Include="Wrappers\HatPackage.cs" />
+    <Compile Include="ITfsLocater.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

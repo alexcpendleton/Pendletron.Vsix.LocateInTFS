@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
+using Pendletron.Vsix.Core;
 
 namespace Pendletron.Vsix.LocateInTFS
 {
@@ -27,8 +28,9 @@ namespace Pendletron.Vsix.LocateInTFS
 	[Guid(GuidList.guidVisualStudio_LocateInTFS_VSIPPkgString)]
     [ProvideAutoLoad("{f1536ef8-92ec-443c-9ed7-fdadf150da82}")]
 	[ProvideAutoLoad("{8fe2df1d-e0da-4ebe-9d5c-415d40e487b5}")]
-	public sealed class VisualStudio_LocateInTFS_VSIPPackage : Package
+	public sealed class VisualStudio_LocateInTFS_VSIPPackage : Package, ILocateInTfsVsPackage
 	{
+		public static bool _initialized = false;
 		/// <summary>
 		/// Default constructor of the package.
 		/// Inside this method you can place any initialization code that does not require 
@@ -50,16 +52,42 @@ namespace Pendletron.Vsix.LocateInTFS
 		/// </summary>
 		protected override void Initialize()
 		{
-			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
-			base.Initialize();
-			var packageService = new LocationService(this);
-			packageService.Initialize();
+			if (!_initialized)
+			{
+				_initialized = true;
+				Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
+				base.Initialize();
+				var packageService = DeriveLocationServiceByVisualStudioVersion();
+				packageService.Initialize();
+			}
 		}
 
-		public T GetService<T>(Type serviceInterfaceType) where T : class 
+		protected ITfsLocater DeriveLocationServiceByVisualStudioVersion()
 		{
-			return GetService(serviceInterfaceType) as T;
+			return new Pendletron.Vsix.LocateInTFS.LocationService(this);
 		}
 
+		public dynamic GetServiceAsDynamic(Type serviceInterfaceType)
+		{
+			return GetService(serviceInterfaceType);
+		}
+
+		private VsPackageIdentifiers packageIDs = null;
+		public IVsPackageIdentifiers PackageIDs
+		{
+			get
+			{
+				if (packageIDs == null)
+				{
+					packageIDs = new VsPackageIdentifiers();
+					packageIDs.guidSolutionExplorer = GuidList.guidSolutionExplorer;
+					packageIDs.guidSolutionExplorerGuid_String = GuidList.guidSolutionExplorerGuid_String;
+					packageIDs.guidVisualStudio_LocateInTFS_VSIPCmdSet = GuidList.guidVisualStudio_LocateInTFS_VSIPCmdSet;
+					packageIDs.guidVisualStudio_LocateInTFS_VSIPCmdSetString = GuidList.guidVisualStudio_LocateInTFS_VSIPCmdSetString;
+					packageIDs.guidVisualStudio_LocateInTFS_VSIPPkgString = GuidList.guidVisualStudio_LocateInTFS_VSIPPkgString;
+				}
+				return packageIDs;
+			}
+		}
 	}
 }
