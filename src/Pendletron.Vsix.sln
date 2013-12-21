@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "License", "License", "{8419
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pendletron.Vsix.LocateInTFS.2010", "Pendletron.Vsix.LocateInTFS.2010\Pendletron.Vsix.LocateInTFS.2010.csproj", "{D853C36B-0D4C-4E92-B852-3E7EBF3D8A37}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pendletron.Vsix.LocateInTFS.2013", "Pendletron.Vsix.LocateInTFS.2013\Pendletron.Vsix.LocateInTFS.2013.csproj", "{AE47666A-4942-4348-ABED-9774655D2FC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{D853C36B-0D4C-4E92-B852-3E7EBF3D8A37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D853C36B-0D4C-4E92-B852-3E7EBF3D8A37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D853C36B-0D4C-4E92-B852-3E7EBF3D8A37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE47666A-4942-4348-ABED-9774655D2FC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE47666A-4942-4348-ABED-9774655D2FC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE47666A-4942-4348-ABED-9774655D2FC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE47666A-4942-4348-ABED-9774655D2FC9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Pendletron.Vsix.Core;
 
@@ -56,17 +57,43 @@ namespace Pendletron.Vsix.LocateInTFS
 			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
 			base.Initialize();
 			var packageService = DeriveLocationServiceByVisualStudioVersion();
-			packageService.Initialize();
+			if (packageService != null)
+			{
+				packageService.Initialize();
+			}
 		}
 
 		protected ITfsLocater DeriveLocationServiceByVisualStudioVersion()
 		{
-			return new Pendletron.Vsix.LocateInTFS.LocationService(this);
+			int version = DetermineVisualStudioVersionNumber();
+			ITfsLocater result = null;
+			switch (version)
+			{
+				case 10:
+					result = new Pendletron.Vsix.LocateInTFS.LocationService(this);
+					break;
+				case 12:
+					result = new Pendletron.Vsix.LocateInTFS.DynamicishLocator(this);
+					break;
+			}
+			return result;
+		}
+
+		public int DetermineVisualStudioVersionNumber()
+		{
+			var d = GetDteAsDynamic();
+			//string version = d.Version;
+			return 12;
 		}
 
 		public dynamic GetServiceAsDynamic(Type serviceInterfaceType)
 		{
 			return GetService(serviceInterfaceType);
+		}
+
+		public dynamic GetDteAsDynamic()
+		{
+			return GetService(typeof (DTE2));
 		}
 
 		private VsPackageIdentifiers packageIDs = null;

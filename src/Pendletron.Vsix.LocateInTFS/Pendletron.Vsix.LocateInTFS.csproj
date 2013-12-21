@@ -23,6 +23,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DeployExtension>True</DeployExtension>
+    <CopyVsixExtensionFiles>True</CopyVsixExtensionFiles>
+    <CopyVsixExtensionLocation>C:\Users\Alex\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions</CopyVsixExtensionLocation>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -171,6 +174,10 @@
     <ProjectReference Include="..\Pendletron.Vsix.LocateInTFS.2010\Pendletron.Vsix.LocateInTFS.2010.csproj">
       <Project>{D853C36B-0D4C-4E92-B852-3E7EBF3D8A37}</Project>
       <Name>Pendletron.Vsix.LocateInTFS.2010</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Pendletron.Vsix.LocateInTFS.2013\Pendletron.Vsix.LocateInTFS.2013.csproj">
+      <Project>{AE47666A-4942-4348-ABED-9774655D2FC9}</Project>
+      <Name>Pendletron.Vsix.LocateInTFS.2013</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
