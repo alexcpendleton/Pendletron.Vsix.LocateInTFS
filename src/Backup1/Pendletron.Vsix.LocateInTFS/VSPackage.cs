@@ -33,7 +33,7 @@ namespace Pendletron.Vsix.LocateInTFS
 	[Guid(GuidList.guidVisualStudio_LocateInTFS_VSIPPkgString)]
     [ProvideAutoLoad("{f1536ef8-92ec-443c-9ed7-fdadf150da82}")]
 	[ProvideAutoLoad("{8fe2df1d-e0da-4ebe-9d5c-415d40e487b5}")]
-	public sealed class VisualStudio_LocateInTFS_VSIPPackage : Package, IOleCommandTarget, ILocateInTfsVsPackage
+	public sealed class VisualStudio_LocateInTFS_VSIPPackage : Package, ILocateInTfsVsPackage
 	{
 		public static bool _initialized = false;
 		/// <summary>
@@ -48,8 +48,6 @@ namespace Pendletron.Vsix.LocateInTFS
 			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
 		}
 
-        private ITfsLocater LocaterPackage { get; set; }
-
 		/////////////////////////////////////////////////////////////////////////////
 		// Overriden Package Implementation
 
@@ -62,53 +60,30 @@ namespace Pendletron.Vsix.LocateInTFS
 			_initialized = true;
 			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
 			base.Initialize();
-
-            LocaterPackage = DerivePackageByVisualStudioVersion();
-            if (LocaterPackage != null)
+			var packageService = DeriveLocationServiceByVisualStudioVersion();
+			if (packageService != null)
 			{
-                LocaterPackage.Initialize();
+				packageService.Initialize();
 			}
 		}
 
-        private ITfsLocater DerivePackageByVisualStudioVersion()
-        {
-            ITfsLocater results = null;
-            int version = DetermineVisualStudioVersionNumber();
-            switch (version)
-            {
-                case 12:
-                    results = new DynamicishLocator(this);
-                    break;
-            }
-            return results;
-        }
+		protected ITfsLocater DeriveLocationServiceByVisualStudioVersion()
+		{
+			int version = DetermineVisualStudioVersionNumber();
+			ITfsLocater result = null;
+			switch (version)
+			{
+				case 10:
+					result = new Pendletron.Vsix.LocateInTFS.LocationService(this);
+					break;
+				case 12:
+					result = new Pendletron.Vsix.LocateInTFS.DynamicishLocator(this);
+					break;
+			}
+			return result;
+		}
 
-	    public int QueryStatus(ref Guid pguidCmdGroup, uint cCmds, OLECMD[] prgCmds, IntPtr pCmdText)
-	    {
-	        var p = new CommandQueryStatusParams();
-	        p.CmdGroup = pguidCmdGroup;
-	        p.Cmds = cCmds;
-	        p.PrgCmds = prgCmds;
-	        p.CmdText = pCmdText;
-
-	        var result = LocaterPackage.CommandBeforeQueryStatus(p);
-	        prgCmds[0].cmdf |= result.PrgCmdsValue;
-	        return (int) result.ReturnValue;
-	    }
-
-	    public int Exec(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
-	    {
-            var p = new CommandExecParams();
-            p.CmdGroup = pguidCmdGroup;
-            p.CommandExecOpt = nCmdexecopt;
-            p.CommandID = nCmdID;
-            p.In = pvaIn;
-            p.Out = pvaOut;
-
-            return LocaterPackage.CommandExecute(p);
-	    }
-
-	    public int DetermineVisualStudioVersionNumber()
+		public int DetermineVisualStudioVersionNumber()
 		{
 			var d = GetDteAsDynamic();
 			//string version = d.Version;
@@ -122,7 +97,7 @@ namespace Pendletron.Vsix.LocateInTFS
 
 		public dynamic GetDteAsDynamic()
 		{
-			return GetService(typeof (EnvDTE.DTE));
+			return GetService(typeof (DTE2));
 		}
 
 		private VsPackageIdentifiers packageIDs = null;
@@ -142,5 +117,5 @@ namespace Pendletron.Vsix.LocateInTFS
 				return packageIDs;
 			}
 		}
-    }
+	}
 }

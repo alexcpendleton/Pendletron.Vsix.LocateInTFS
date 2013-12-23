@@ -236,5 +236,16 @@ namespace Pendletron.Vsix.LocateInTFS
 				}
 			}
 		}
-	}
+
+
+        public int CommandExecute(ICommandExecParams e)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IQueryStatusResult CommandBeforeQueryStatus(ICommandQueryStatusParams e)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

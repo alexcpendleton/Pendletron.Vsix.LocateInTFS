@@ -3,3 +3,13 @@ File/folder/project/Solution/Web Project Folder/Web Folder/Web Item context menu
 GuidID = 3
 CmdID = 1072/1073/1026/1043/1136/1137/1138/1107
 NameLoc = Item/Folder/Project/Solution/Web Project Folder/Web Folder/Web Item/App Designer Folder
+
+-------------------
+
+ClientHelperVS (.Instance)
+.GetSceWorkspaceOrSensibleWorkspace
+
+
+
+HatterasService
+IsCurrentContextTFVC

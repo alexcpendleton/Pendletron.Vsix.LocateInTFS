@@ -10,9 +10,9 @@ namespace Pendletron.Vsix.Core
 		bool IsVersionControlled(string fileSystemPath);
 		void Locate(string localPath);
 		void Initialize();
-
 		string GetSelectedPathFromSolutionExplorer();
-
-		string GetSelectedPathFromActiveDocument();
-	}
+        string GetSelectedPathFromActiveDocument();
+        int CommandExecute(ICommandExecParams e);
+        IQueryStatusResult CommandBeforeQueryStatus(ICommandQueryStatusParams e);
+    }
 }

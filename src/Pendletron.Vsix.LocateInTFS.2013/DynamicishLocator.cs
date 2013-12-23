@@ -1,19 +1,35 @@
 using System;
+using System.CodeDom;
 using System.ComponentModel.Design;
 using System.Reflection;
 using EnvDTE;
 using EnvDTE80;
+using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Pendletron.Vsix.Core.Wrappers;
 using Pendletron.Vsix.LocateInTFS.Commands;
 using System.Collections.Generic;
 using Pendletron.Vsix.Core;
+using InteropConstants = Microsoft.VisualStudio.Shell.Interop.Constants;
 
 namespace Pendletron.Vsix.LocateInTFS
 {
 	public class DynamicishLocator : ITfsLocater
 	{
-		public DynamicishLocator(ILocateInTfsVsPackage pkg)
+	    private HatPackage _hat = null;
+	    public HatPackage HatterasPackage
+	    {
+	        get
+	        {
+	            if (_hat == null)
+	            {
+	                _hat = new HatPackage();
+	            }
+	            return _hat;
+	        }
+	    }
+
+	    public DynamicishLocator(ILocateInTfsVsPackage pkg)
 		{
 			Package = pkg;
 		}
@@ -22,16 +38,67 @@ namespace Pendletron.Vsix.LocateInTFS
 
 		public void Initialize()
 		{
+            RegisterCommands();
+		}
+
+        public Dictionary<Guid, CommandItem> CommandMap { get; set; }
+
+	    public class CommandItem
+	    {
+	        public CommandItem()
+	        {
+	            
+	        }
+
+	        public CommandItem(LocateCommand baseCommand, MenuCommand menuCommand)
+	        {
+	            BaseCommand = baseCommand;
+	            MenuCommand = menuCommand;
+	        }
+
+	        public LocateCommand BaseCommand { get; set; }
+            public MenuCommand MenuCommand { get; set; }
+	    }
+
+	    public void RegisterCommands()
+	    {
+            /*
+             * 
 			var solutionExplorerCommand = new SolutionExplorerLocateCommand(this, Package);
 			var activeWindowCommand = new ActiveWindowLocateCommand(this, Package);
 			solutionExplorerCommand.RegisterCommand();
-			activeWindowCommand.RegisterCommand();
-		}
+			activeWindowCommand.RegisterCommand();*/
+	        var commandService = Package.GetServiceAsDynamic(typeof (IMenuCommandService)) as IMenuCommandService;
+	        if (commandService != null)
+	        {
+                CommandMap = new Dictionary<Guid, CommandItem>();
+	            var activeWindow = new ActiveWindowLocateCommand(this, Package);
+                MenuCommand cmd = activeWindow.RegisterCommand();
+	            CommandMap[cmd.CommandID.Guid] = new CommandItem(activeWindow, cmd);
+
+	            
+	            var solutionExplorer = new SolutionExplorerLocateCommand(this, Package);
+	            cmd = solutionExplorer.RegisterCommand();
+                CommandMap[cmd.CommandID.Guid] = new CommandItem(solutionExplorer, cmd);
+	        }
+	    }
+
 
 		public bool IsVersionControlled(string selectedPath)
 		{
 			bool isVersionControlled = false;
-			try
+		    try
+		    {
+                // Could be a git context, not currently supported
+                bool isTfsContext = HatterasPackage.HatterasService.IsCurrentContextTFVC;
+		        if (!isTfsContext)
+		        {
+		            return false;
+		        }
+		    }
+		    catch { }
+
+		    try
 			{
 				GetWorkspaceForPath(selectedPath, ws =>
 				{
@@ -161,8 +228,7 @@ namespace Pendletron.Vsix.LocateInTFS
 
 		protected dynamic GetWorkspaceForSolutionPath(string localFilePath)
 		{
-			HatPackage hat = new HatPackage();
-			dynamic vcServer = hat.GetVersionControlServer();
+			dynamic vcServer = HatterasPackage.GetVersionControlServer();
 			dynamic workspace = vcServer.GetWorkspace(localFilePath);
 			return workspace;
 		}
@@ -200,13 +266,25 @@ namespace Pendletron.Vsix.LocateInTFS
 			return Assembly.Load("Microsoft.VisualStudio.TeamFoundation.VersionControl");
 		}
 
+	    private dynamic _explorerScc = null;
+	    public dynamic ExplorerScc
+	    {
+	        get
+	        {
+	            if (_explorerScc == null)
+	            {
+                    dynamic explorerSccDiag = new AccessPrivateWrapper(HatterasPackage._wrapped.ExplorerSccDiagProvider);
+                    _explorerScc = new AccessPrivateWrapper(explorerSccDiag.m_explorerScc);
+	            }
+	            return _explorerScc;
+	        }
+	    }
+
 		public void Locate(string localPath)
 		{
 			// Get the first selected item? _dte.
 			if (String.IsNullOrEmpty(localPath)) return; // Throw an exception, log to output?
-
-			HatPackage hat = new HatPackage();
-
+            
 			string localFilePath = localPath;
 			string serverItem = "";
 			try {
@@ -216,25 +294,54 @@ namespace Pendletron.Vsix.LocateInTFS
 			}
 			catch (Exception) { }
 
-			if (!String.IsNullOrEmpty(serverItem))
-			{
-				Assembly tfsVC = TfsVersionControlAssembly;
+		    if (!String.IsNullOrEmpty(serverItem))
+		    {
+		        Assembly tfsVC = TfsVersionControlAssembly;
 
-				// if the tool window hasn't been opened yet "explorer" will be null, so we make sure it has opened at least once via ExecuteCommand
-				DTEInstance.ExecuteCommand("View.TfsSourceControlExplorer");
-				Type explorer = tfsVC.GetType("Microsoft.VisualStudio.TeamFoundation.VersionControl.ToolWindowSccExplorer");
-
-				var prop = explorer.GetProperty("Instance", BindingFlags.NonPublic | BindingFlags.Static);
-				object toolWindowSccExplorerInstance = prop.GetValue(null, null);
-				if (toolWindowSccExplorerInstance != null)
-				{
-					var navMethod = toolWindowSccExplorerInstance.GetType().GetMethod("Navigate", BindingFlags.Default | BindingFlags.Instance | BindingFlags.NonPublic);
-					if (navMethod != null)
-					{
-						navMethod.Invoke(toolWindowSccExplorerInstance, new object[] { serverItem });
-					}
-				}
-			}
+		        // if the tool window hasn't been opened yet "explorer" will be null, so we make sure it has opened at least once via ExecuteCommand
+		        //DTEInstance.ExecuteCommand("View.TfsSourceControlExplorer");
+		        ExplorerScc.NavigateAsync(serverItem);
+		        ExplorerScc.UpdateToolbarState();
+		    }
 		}
-	}
+
+
+        public int CommandExecute(ICommandExecParams e)
+        {
+            Guid commandID = e.CmdGroup;
+            if (CommandMap.ContainsKey(commandID))
+            {
+                var mappedCommand = CommandMap[commandID];
+                //var x = Microsoft.VisualStudio.Shell.Interop.Constants.OLECMDERR_E_UNKNOWNGROUP;
+                mappedCommand.BaseCommand.Execute(mappedCommand.MenuCommand, new EventArgs());
+            }
+            return 0;
+        }
+
+        public IQueryStatusResult CommandBeforeQueryStatus(ICommandQueryStatusParams e)
+        {
+            var result = new QueryStatusResult();
+            Guid commandID = e.CmdGroup;
+            var prgcmds = (OLECMD[])e.PrgCmds;
+            uint wtfisthis = prgcmds[0].cmdf;
+
+            if (CommandMap.ContainsKey(commandID))
+            {
+                var mappedCommand = CommandMap[commandID];
+                bool isVisible = mappedCommand.BaseCommand.BeforeQueryStatus(mappedCommand.MenuCommand, new EventArgs());
+                wtfisthis |= (uint) OLECMDF.OLECMDF_SUPPORTED | (uint) OLECMDF.OLECMDF_ENABLED;
+                if (!isVisible)
+                {
+                    wtfisthis = (uint)OLECMDF.OLECMDF_DEFHIDEONCTXTMENU | (uint)OLECMDF.OLECMDF_SUPPORTED | (uint)OLECMDF.OLECMDF_INVISIBLE;
+                }
+                result.IsVersionControlled = isVisible;
+            }
+            else
+            {
+            }
+            result.PrgCmdsValue = wtfisthis;
+            result.ReturnValue = 0;
+            return result;
+        }
+    }
 }

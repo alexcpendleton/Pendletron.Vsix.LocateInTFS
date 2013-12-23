@@ -9,7 +9,7 @@ namespace Pendletron.Vsix.Core.Wrappers
 {
 	public class HatPackage 
 	{
-		private dynamic _wrapped = null;
+		public dynamic _wrapped = null;
 		private Assembly _vcAssembly = null;
 
 		public HatPackage() {
