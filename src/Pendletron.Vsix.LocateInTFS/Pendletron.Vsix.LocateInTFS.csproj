@@ -13,7 +13,7 @@
     <AssemblyName>Pendletron.Vsix.LocateInTFS</AssemblyName>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -46,8 +46,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DeployExtension>True</DeployExtension>
-    <CopyVsixExtensionFiles>False</CopyVsixExtensionFiles>
-    <CopyVsixExtensionLocation>C:\Users\Alex\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions</CopyVsixExtensionLocation>
+    <CopyVsixExtensionFiles>True</CopyVsixExtensionFiles>
+    <CopyVsixExtensionLocation>C:\Users\Alex\AppData\Local\Microsoft\VisualStudio\10.0Exp\Extensions</CopyVsixExtensionLocation>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -64,21 +64,13 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.OLE.Interop" />
+    <Reference Include="Microsoft.VisualStudio.Shell.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0" />
-    <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0">
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.Shell.Interop.12.0">
-      <EmbedInteropTypes>true</EmbedInteropTypes>
-    </Reference>
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop" />
-    <Reference Include="Microsoft.VisualStudio.Shell.12.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0" />
-    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.11.0" />
-    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.12.0" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -203,10 +195,6 @@
     <ProjectReference Include="..\Pendletron.Vsix.LocateInTFS.2010\Pendletron.Vsix.LocateInTFS.2010.csproj">
       <Project>{D853C36B-0D4C-4E92-B852-3E7EBF3D8A37}</Project>
       <Name>Pendletron.Vsix.LocateInTFS.2010</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Pendletron.Vsix.LocateInTFS.2013\Pendletron.Vsix.LocateInTFS.2013.csproj">
-      <Project>{AE47666A-4942-4348-ABED-9774655D2FC9}</Project>
-      <Name>Pendletron.Vsix.LocateInTFS.2013</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

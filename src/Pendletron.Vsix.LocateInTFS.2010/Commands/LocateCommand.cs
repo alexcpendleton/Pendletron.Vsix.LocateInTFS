@@ -28,29 +28,30 @@ namespace Pendletron.Vsix.LocateInTFS.Commands
 			}
 		}
 
-		public virtual void RegisterCommand()
-		{
-			// Create the command for the menu item.
-			CommandID menuCommandID = new CommandID(PackageIDs.guidVisualStudio_LocateInTFS_VSIPCmdSet, CommandID);
-			OleMenuCommand menuItem = new OleMenuCommand(Execute, menuCommandID);
-			menuItem.BeforeQueryStatus += new EventHandler(BeforeQueryStatus);
-			AddToMenuCommandService(menuItem);
-		}
+        public virtual Microsoft.VisualStudio.Shell.OleMenuCommand RegisterCommand()
+        {
+            // Create the command for the menu item.
+            CommandID menuCommandID = new CommandID(PackageIDs.guidVisualStudio_LocateInTFS_VSIPCmdSet, CommandID);
+            var menuItem = new Microsoft.VisualStudio.Shell.OleMenuCommand(Execute, menuCommandID);
+            //menuItem.BeforeQueryStatus += new EventHandler(BeforeQueryStatus);
+            AddToMenuCommandService(menuItem);
+            return menuItem;
+        }
 
 		public abstract string GetSelectedLocalPath();
 
-		public virtual void BeforeQueryStatus(object sender, EventArgs e)
-		{
-			var menuCommand = sender as MenuCommand;
-			string selectedPath = GetSelectedLocalPath();
-			bool isVersionControlled = Locater.IsVersionControlled(selectedPath);
-			menuCommand.Visible = isVersionControlled;
-		}
+        public virtual bool BeforeQueryStatus(object sender, EventArgs e)
+        {
+            var menuCommand = sender as MenuCommand;
+            string selectedPath = GetSelectedLocalPath();
+            bool isVersionControlled = Locater.IsVersionControlled(selectedPath);
+            return isVersionControlled;
+        }
 
-		public virtual void Execute(object sender, EventArgs e)
-		{
-			string selectedPath = GetSelectedLocalPath();
-			Locater.Locate(selectedPath);
-		}
+        public virtual void Execute(object sender, EventArgs e)
+        {
+            string selectedPath = GetSelectedLocalPath();
+            Locater.Locate(selectedPath);
+        }
 	}
 }

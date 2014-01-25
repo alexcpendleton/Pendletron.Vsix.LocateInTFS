@@ -76,8 +76,11 @@ namespace Pendletron.Vsix.LocateInTFS
             int version = DetermineVisualStudioVersionNumber();
             switch (version)
             {
+                case 10:
+                    results = new LocationService(this);
+                    break;
                 case 12:
-                    results = new DynamicishLocator(this);
+                    //results = new DynamicishLocator(this);
                     break;
             }
             return results;
@@ -111,8 +114,10 @@ namespace Pendletron.Vsix.LocateInTFS
 	    public int DetermineVisualStudioVersionNumber()
 		{
 			var d = GetDteAsDynamic();
-			//string version = d.Version;
-			return 12;
+			string version = d.Version;
+	        double result = 0;
+	        Double.TryParse(version, out result);
+	        return Convert.ToInt32(Math.Floor(result));
 		}
 
 		public dynamic GetServiceAsDynamic(Type serviceInterfaceType)

@@ -4,6 +4,7 @@ using System.Reflection;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.TeamFoundation.VersionControl.Client;
+using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Pendletron.Vsix.Core.Wrappers;
 using Pendletron.Vsix.LocateInTFS.Commands;
@@ -23,12 +24,48 @@ namespace Pendletron.Vsix.LocateInTFS
 		public ILocateInTfsVsPackage Package { get; set; }
 
 		public void Initialize()
-		{
+        {
+            RegisterCommands();
+		}
+        public Dictionary<Guid, CommandItem> CommandMap { get; set; }
+        public class CommandItem
+        {
+            public CommandItem()
+            {
+
+            }
+
+            public CommandItem(LocateCommand baseCommand, MenuCommand menuCommand)
+            {
+                BaseCommand = baseCommand;
+                MenuCommand = menuCommand;
+            }
+
+            public LocateCommand BaseCommand { get; set; }
+            public MenuCommand MenuCommand { get; set; }
+        }
+        public void RegisterCommands()
+        {
+            /*
+             * 
 			var solutionExplorerCommand = new SolutionExplorerLocateCommand(this, Package);
 			var activeWindowCommand = new ActiveWindowLocateCommand(this, Package);
 			solutionExplorerCommand.RegisterCommand();
-			activeWindowCommand.RegisterCommand();
-		}
+			activeWindowCommand.RegisterCommand();*/
+            var commandService = Package.GetServiceAsDynamic(typeof(IMenuCommandService)) as IMenuCommandService;
+            if (commandService != null)
+            {
+                CommandMap = new Dictionary<Guid, CommandItem>();
+                var activeWindow = new ActiveWindowLocateCommand(this, Package);
+                MenuCommand cmd = activeWindow.RegisterCommand();
+                CommandMap[cmd.CommandID.Guid] = new CommandItem(activeWindow, cmd);
+
+
+                var solutionExplorer = new SolutionExplorerLocateCommand(this, Package);
+                cmd = solutionExplorer.RegisterCommand();
+                CommandMap[cmd.CommandID.Guid] = new CommandItem(solutionExplorer, cmd);
+            }
+        }
 
 		public bool IsVersionControlled(string selectedPath)
 		{
@@ -235,17 +272,44 @@ namespace Pendletron.Vsix.LocateInTFS
 					}
 				}
 			}
-		}
-
+        }
 
         public int CommandExecute(ICommandExecParams e)
         {
-            throw new NotImplementedException();
+            Guid commandID = e.CmdGroup;
+            if (CommandMap.ContainsKey(commandID))
+            {
+                var mappedCommand = CommandMap[commandID];
+                //var x = Microsoft.VisualStudio.Shell.Interop.Constants.OLECMDERR_E_UNKNOWNGROUP;
+                mappedCommand.BaseCommand.Execute(mappedCommand.MenuCommand, new EventArgs());
+            }
+            return 0;
         }
 
         public IQueryStatusResult CommandBeforeQueryStatus(ICommandQueryStatusParams e)
         {
-            throw new NotImplementedException();
+            var result = new QueryStatusResult();
+            Guid commandID = e.CmdGroup;
+            var prgcmds = (OLECMD[])e.PrgCmds;
+            uint wtfisthis = prgcmds[0].cmdf;
+
+            if (CommandMap.ContainsKey(commandID))
+            {
+                var mappedCommand = CommandMap[commandID];
+                bool isVisible = mappedCommand.BaseCommand.BeforeQueryStatus(mappedCommand.MenuCommand, new EventArgs());
+                wtfisthis |= (uint)OLECMDF.OLECMDF_SUPPORTED | (uint)OLECMDF.OLECMDF_ENABLED;
+                if (!isVisible)
+                {
+                    wtfisthis = (uint)OLECMDF.OLECMDF_DEFHIDEONCTXTMENU | (uint)OLECMDF.OLECMDF_SUPPORTED | (uint)OLECMDF.OLECMDF_INVISIBLE;
+                }
+                result.IsVersionControlled = isVisible;
+            }
+            else
+            {
+            }
+            result.PrgCmdsValue = wtfisthis;
+            result.ReturnValue = 0;
+            return result;
         }
     }
 }
