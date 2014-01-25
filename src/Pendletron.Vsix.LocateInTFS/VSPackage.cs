@@ -80,7 +80,7 @@ namespace Pendletron.Vsix.LocateInTFS
                     results = new LocationService(this);
                     break;
                 case 12:
-                    //results = new DynamicishLocator(this);
+                    results = new DynamicishLocator(this);
                     break;
             }
             return results;
