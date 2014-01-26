@@ -1,22 +1,35 @@
-using System;
+﻿using System;
+using System.CodeDom;
 using System.ComponentModel.Design;
 using System.Reflection;
 using EnvDTE;
 using EnvDTE80;
-using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
-using Pendletron.Vsix.Core.Wrappers;
-using Pendletron.Vsix.LocateInTFS.Commands;
 using System.Collections.Generic;
+using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.TeamFoundation.Client;
-using Pendletron.Vsix.Core;
+using Pendletron.Vsix.Core.Commands;
+using Pendletron.Vsix.Core.Wrappers;
 
-namespace Pendletron.Vsix.LocateInTFS
+namespace Pendletron.Vsix.Core
 {
-	public class LocationService : ITfsLocater
-	{
-		public LocationService(ILocateInTfsVsPackage pkg)
+    abstract public class TfsLocaterBase : ITfsLocater
+    {
+	    private HatPackage _hat = null;
+	    virtual public HatPackage HatterasPackage
+	    {
+	        get
+	        {
+	            if (_hat == null)
+	            {
+	                _hat = new HatPackage();
+	            }
+	            return _hat;
+	        }
+	    }
+
+	    public TfsLocaterBase(ILocateInTfsVsPackage pkg)
 		{
 			Package = pkg;
 		}
@@ -24,57 +37,62 @@ namespace Pendletron.Vsix.LocateInTFS
 		public ILocateInTfsVsPackage Package { get; set; }
 
 		public void Initialize()
-        {
+		{
             RegisterCommands();
 		}
+
         public Dictionary<Guid, CommandItem> CommandMap { get; set; }
-        public class CommandItem
-        {
-            public CommandItem()
-            {
 
-            }
+	    public class CommandItem
+	    {
+	        public CommandItem()
+	        {
+	            
+	        }
 
-            public CommandItem(LocateCommand baseCommand, MenuCommand menuCommand)
-            {
-                BaseCommand = baseCommand;
-                MenuCommand = menuCommand;
-            }
+	        public CommandItem(LocateCommand baseCommand, MenuCommand menuCommand)
+	        {
+	            BaseCommand = baseCommand;
+	            MenuCommand = menuCommand;
+	        }
 
-            public LocateCommand BaseCommand { get; set; }
+	        public LocateCommand BaseCommand { get; set; }
             public MenuCommand MenuCommand { get; set; }
-        }
-        public void RegisterCommands()
-        {
+	    }
+
+	    public void RegisterCommands()
+	    {
             /*
              * 
 			var solutionExplorerCommand = new SolutionExplorerLocateCommand(this, Package);
 			var activeWindowCommand = new ActiveWindowLocateCommand(this, Package);
 			solutionExplorerCommand.RegisterCommand();
 			activeWindowCommand.RegisterCommand();*/
-            var commandService = Package.GetServiceAsDynamic(typeof(IMenuCommandService)) as IMenuCommandService;
-            if (commandService != null)
-            {
+	        var commandService = Package.GetServiceAsDynamic(typeof (IMenuCommandService)) as IMenuCommandService;
+	        if (commandService != null)
+	        {
                 CommandMap = new Dictionary<Guid, CommandItem>();
-                var activeWindow = new ActiveWindowLocateCommand(this, Package);
+	            var activeWindow = new ActiveWindowLocateCommand(this, Package);
                 MenuCommand cmd = activeWindow.RegisterCommand();
-                CommandMap[cmd.CommandID.Guid] = new CommandItem(activeWindow, cmd);
+	            CommandMap[cmd.CommandID.Guid] = new CommandItem(activeWindow, cmd);
 
-
-                var solutionExplorer = new SolutionExplorerLocateCommand(this, Package);
-                cmd = solutionExplorer.RegisterCommand();
+	            
+	            var solutionExplorer = new SolutionExplorerLocateCommand(this, Package);
+	            cmd = solutionExplorer.RegisterCommand();
                 CommandMap[cmd.CommandID.Guid] = new CommandItem(solutionExplorer, cmd);
-            }
-        }
+	        }
+	    }
 
-		public bool IsVersionControlled(string selectedPath)
+
+		virtual public bool IsVersionControlled(string selectedPath)
 		{
-			bool isVersionControlled = false;
-			try
+		    bool isVersionControlled = false;
+		    try
 			{
 				GetWorkspaceForPath(selectedPath, ws =>
 				{
-					if (ws != null) {
+					if (ws != null) 
+                    {
 						isVersionControlled = true;
 					}
 				});
@@ -100,12 +118,12 @@ namespace Pendletron.Vsix.LocateInTFS
 			set { _dteInstance = value; }
 		}
 
-		private DTE2 GetDTEService()
+		virtual protected DTE2 GetDTEService()
 		{
 			return Package.GetServiceAsDynamic(typeof(DTE)) as DTE2;
 		}
 
-		public UIHierarchyItem GetSelectedUIHierarchy(UIHierarchy solutionExplorer)
+		virtual public UIHierarchyItem GetSelectedUIHierarchy(UIHierarchy solutionExplorer)
 		{
 			object[] objArray = solutionExplorer.SelectedItems as object[];
 			if (objArray != null && objArray.Length == 1)
@@ -114,7 +132,7 @@ namespace Pendletron.Vsix.LocateInTFS
 				return (UIHierarchyItem)null;
 		}
 
-		public string GetLocalPath(SelectedItem item)
+		virtual public string GetLocalPath(SelectedItem item)
 		{
 			string result = "";
 
@@ -148,7 +166,7 @@ namespace Pendletron.Vsix.LocateInTFS
 			return result;
 		}
 
-		public string GetSelectedPathFromActiveDocument()
+		virtual public string GetSelectedPathFromActiveDocument()
 		{
 			if (DTEInstance.ActiveDocument != null)
 			{
@@ -158,7 +176,7 @@ namespace Pendletron.Vsix.LocateInTFS
 		}
 
 
-		public string GetSelectedPathFromSolutionExplorer()
+		virtual public string GetSelectedPathFromSolutionExplorer()
 		{
 			string localPath = "";
 			if (DTEInstance.SelectedItems != null && DTEInstance.SelectedItems.Count > 0)
@@ -175,11 +193,11 @@ namespace Pendletron.Vsix.LocateInTFS
 			return localPath;
 		}
 
-		protected void GetWorkspaceForPath(string localFilePath, Action<Workspace> ifFound)
+		virtual protected void GetWorkspaceForPath(string localFilePath, Action<ILocaterWorkspace> ifFound)
 		{
 			// Needed to change this to use a callback because if it's a non-solution 
 			// path then the TFS collection gets disposed
-			Workspace workspace = null;
+			ILocaterWorkspace workspace = null;
 			try
 			{
 				// TODO: Should probably check if solution is connected to TFS instead of wrapping
@@ -198,15 +216,14 @@ namespace Pendletron.Vsix.LocateInTFS
 			}
 		}
 
-		protected Workspace GetWorkspaceForSolutionPath(string localFilePath)
+        virtual public ILocaterWorkspace GetWorkspaceForSolutionPath(string localFilePath)
 		{
-			HatPackage hat = new HatPackage();
-			VersionControlServer vcServer = hat.GetVersionControlServer();
+			dynamic vcServer = HatterasPackage.GetVersionControlServer();
 			Workspace workspace = vcServer.GetWorkspace(localFilePath);
-			return workspace;
+            return new TfsWorkspaceLocatorDecorator(workspace);
 		}
 
-		protected void GetWorkspaceForNonSolutionPath(string localFilePath, Action<Workspace> ifFound)
+        virtual public void GetWorkspaceForNonSolutionPath(string localFilePath, Action<ILocaterWorkspace> ifFound)
 		{
 			Workstation station = Workstation.Current;
 			Workspace result = null;
@@ -220,30 +237,18 @@ namespace Pendletron.Vsix.LocateInTFS
 						result = wsInfo.GetWorkspace(collection);
 						if (result != null)
 						{
-							ifFound(result);
+							ifFound(new TfsWorkspaceLocatorDecorator(result));
 						}
 					}
 				}
 			}
 		}
 
-		private Assembly _tfsVersionControlAssembly = null;
-		public Assembly TfsVersionControlAssembly
-		{
-			get { return (_tfsVersionControlAssembly ?? (_tfsVersionControlAssembly = LoadTfsVersionControlAssembly())); }
-		}
-		protected Assembly LoadTfsVersionControlAssembly()
-		{
-			return Assembly.Load("Microsoft.VisualStudio.TeamFoundation.VersionControl");
-		}
-
-		public void Locate(string localPath)
+		virtual public void Locate(string localPath)
 		{
 			// Get the first selected item? _dte.
 			if (String.IsNullOrEmpty(localPath)) return; // Throw an exception, log to output?
-
-			HatPackage hat = new HatPackage();
-
+            
 			string localFilePath = localPath;
 			string serverItem = "";
 			try {
@@ -253,28 +258,15 @@ namespace Pendletron.Vsix.LocateInTFS
 			}
 			catch (Exception) { }
 
-			if (!String.IsNullOrEmpty(serverItem))
-			{
-				Assembly tfsVC = TfsVersionControlAssembly;
+		    if (!String.IsNullOrEmpty(serverItem))
+		    {
+                ShowInExplorer(serverItem);
+		    }
+		}
 
-				// if the tool window hasn't been opened yet "explorer" will be null, so we make sure it has opened at least once via ExecuteCommand
-				DTEInstance.ExecuteCommand("View.TfsSourceControlExplorer");
-				Type explorer = tfsVC.GetType("Microsoft.VisualStudio.TeamFoundation.VersionControl.ToolWindowSccExplorer");
+        abstract public void ShowInExplorer(string serverItem);
 
-				var prop = explorer.GetProperty("Instance", BindingFlags.NonPublic | BindingFlags.Static);
-				object toolWindowSccExplorerInstance = prop.GetValue(null, null);
-				if (toolWindowSccExplorerInstance != null)
-				{
-					var navMethod = toolWindowSccExplorerInstance.GetType().GetMethod("Navigate", BindingFlags.Default | BindingFlags.Instance | BindingFlags.NonPublic);
-					if (navMethod != null)
-					{
-						navMethod.Invoke(toolWindowSccExplorerInstance, new object[] { serverItem });
-					}
-				}
-			}
-        }
-
-        public int CommandExecute(ICommandExecParams e)
+        virtual public int CommandExecute(ICommandExecParams e)
         {
             Guid commandID = e.CmdGroup;
             if (CommandMap.ContainsKey(commandID))
@@ -286,7 +278,7 @@ namespace Pendletron.Vsix.LocateInTFS
             return 0;
         }
 
-        public IQueryStatusResult CommandBeforeQueryStatus(ICommandQueryStatusParams e)
+        virtual public IQueryStatusResult CommandBeforeQueryStatus(ICommandQueryStatusParams e)
         {
             var result = new QueryStatusResult();
             Guid commandID = e.CmdGroup;
@@ -297,7 +289,7 @@ namespace Pendletron.Vsix.LocateInTFS
             {
                 var mappedCommand = CommandMap[commandID];
                 bool isVisible = mappedCommand.BaseCommand.BeforeQueryStatus(mappedCommand.MenuCommand, new EventArgs());
-                wtfisthis |= (uint)OLECMDF.OLECMDF_SUPPORTED | (uint)OLECMDF.OLECMDF_ENABLED;
+                wtfisthis |= (uint) OLECMDF.OLECMDF_SUPPORTED | (uint) OLECMDF.OLECMDF_ENABLED;
                 if (!isVisible)
                 {
                     wtfisthis = (uint)OLECMDF.OLECMDF_DEFHIDEONCTXTMENU | (uint)OLECMDF.OLECMDF_SUPPORTED | (uint)OLECMDF.OLECMDF_INVISIBLE;

@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Pendletron.Vsix.Core;
+using Pendletron.Vsix.Core.Locaters;
 
 namespace Pendletron.Vsix.LocateInTFS
 {
@@ -77,13 +78,13 @@ namespace Pendletron.Vsix.LocateInTFS
             switch (version)
             {
                 case 10:
-                    results = new LocationService(this);
+                    results = new Vs2010Locater(this);
                     break;
                 case 11:
-                    results = new _2012_DynamicishLocator(this);
+                    results = new Vs2012Locater(this);
                     break;
                 case 12:
-                    results = new DynamicishLocator(this);
+                    results = new Vs2013Locater(this);
                     break;
             }
             return results;

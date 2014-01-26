@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Design;
-using Pendletron.Vsix.Core;
-namespace Pendletron.Vsix.LocateInTFS.Commands
+
+namespace Pendletron.Vsix.Core.Commands
 {
 
 	public abstract class LocateCommand

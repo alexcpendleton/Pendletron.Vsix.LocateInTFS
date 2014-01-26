@@ -10,13 +10,12 @@ using Pendletron.Vsix.Core.Commands;
 using Pendletron.Vsix.Core.Wrappers;
 using System.Collections.Generic;
 using Pendletron.Vsix.Core;
-using InteropConstants = Microsoft.VisualStudio.Shell.Interop.Constants;
 
 namespace Pendletron.Vsix.LocateInTFS
 {
-	public class DynamicishLocatorBase : TfsLocaterBase
+	public class ExplorerSccLocater : TfsLocaterBase
 	{
-        public DynamicishLocatorBase(ILocateInTfsVsPackage package):base(package)
+        public ExplorerSccLocater(ILocateInTfsVsPackage package):base(package)
 	    {
 	    }
 

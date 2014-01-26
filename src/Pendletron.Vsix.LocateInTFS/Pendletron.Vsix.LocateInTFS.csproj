@@ -47,7 +47,7 @@
     <WarningLevel>4</WarningLevel>
     <DeployExtension>True</DeployExtension>
     <CopyVsixExtensionFiles>True</CopyVsixExtensionFiles>
-    <CopyVsixExtensionLocation>C:\Users\Alex\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions</CopyVsixExtensionLocation>
+    <CopyVsixExtensionLocation>C:\Users\Alex\AppData\Local\Microsoft\VisualStudio\10.0Exp\Extensions</CopyVsixExtensionLocation>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -191,14 +191,6 @@
     <ProjectReference Include="..\Pendletron.Vsix.Core\Pendletron.Vsix.Core.csproj">
       <Project>{161765BB-4464-4308-8E9A-15F4830D499B}</Project>
       <Name>Pendletron.Vsix.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Pendletron.Vsix.LocateInTFS.2010\Pendletron.Vsix.LocateInTFS.2010.csproj">
-      <Project>{D853C36B-0D4C-4E92-B852-3E7EBF3D8A37}</Project>
-      <Name>Pendletron.Vsix.LocateInTFS.2010</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Pendletron.Vsix.LocateInTFS.2013\Pendletron.Vsix.LocateInTFS.2013.csproj">
-      <Project>{ae47666a-4942-4348-abed-9774655d2fc9}</Project>
-      <Name>Pendletron.Vsix.LocateInTFS.2013</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

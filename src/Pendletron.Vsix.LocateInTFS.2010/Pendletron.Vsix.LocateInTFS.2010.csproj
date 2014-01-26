@@ -57,10 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\ActiveWindowLocateCommand.cs" />
-    <Compile Include="Commands\LocateCommand.cs" />
-    <Compile Include="Commands\SolutionExplorerLocateCommand.cs" />
-    <Compile Include="LocationService.cs" />
+    <Compile Include="Vs2010Locater.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
