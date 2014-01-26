@@ -18,7 +18,7 @@ namespace Pendletron.Vsix.Core.Wrappers
 		/// <summary>
 		/// The object we are going to wrap
 		/// </summary>
-		object _wrapped;
+		public object _wrapped;
 
 		/// <summary>
 		/// Specify the flags for accessing members

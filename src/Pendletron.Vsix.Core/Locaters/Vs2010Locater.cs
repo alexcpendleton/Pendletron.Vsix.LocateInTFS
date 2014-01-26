@@ -18,16 +18,6 @@ namespace Pendletron.Vsix.LocateInTFS
 	{
 	    public Vs2010Locater(ILocateInTfsVsPackage pkg) : base(pkg) { }
 
-		private Assembly _tfsVersionControlAssembly = null;
-		public Assembly TfsVersionControlAssembly
-		{
-			get { return (_tfsVersionControlAssembly ?? (_tfsVersionControlAssembly = LoadTfsVersionControlAssembly())); }
-		}
-		protected Assembly LoadTfsVersionControlAssembly()
-		{
-			return Assembly.Load("Microsoft.VisualStudio.TeamFoundation.VersionControl");
-		}
-
 	    public override void ShowInExplorer(string serverItem)
         {
             if (!String.IsNullOrEmpty(serverItem))

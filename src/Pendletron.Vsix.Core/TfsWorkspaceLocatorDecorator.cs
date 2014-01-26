@@ -4,11 +4,11 @@ namespace Pendletron.Vsix.Core
 {
     public class TfsWorkspaceLocatorDecorator : ILocaterWorkspace
     {
-        public TfsWorkspaceLocatorDecorator(Workspace toDecorate)
+        public TfsWorkspaceLocatorDecorator(object toDecorate)
         {
             Decorated = toDecorate;
         }
-        internal Workspace Decorated { get; set; }
+        internal dynamic Decorated { get; set; }
         public string TryGetServerItemForLocalItem(string localPath)
         {
             return Decorated.TryGetServerItemForLocalItem(localPath);

@@ -10,7 +10,7 @@ namespace Pendletron.Vsix.Core.Wrappers
 	public class HatPackage 
 	{
 		public dynamic _wrapped = null;
-		private Assembly _vcAssembly = null;
+		public Assembly _vcAssembly = null;
 
 		public HatPackage() {
 			_vcAssembly = Assembly.Load("Microsoft.VisualStudio.TeamFoundation.VersionControl");

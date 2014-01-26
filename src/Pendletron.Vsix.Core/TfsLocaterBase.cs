@@ -16,6 +16,17 @@ namespace Pendletron.Vsix.Core
 {
     abstract public class TfsLocaterBase : ITfsLocater
     {
+
+        private Assembly _tfsVersionControlAssembly = null;
+        public Assembly TfsVersionControlAssembly
+        {
+            get { return (_tfsVersionControlAssembly ?? (_tfsVersionControlAssembly = LoadTfsVersionControlAssembly())); }
+        }
+        protected Assembly LoadTfsVersionControlAssembly()
+        {
+            return Assembly.Load("Microsoft.VisualStudio.TeamFoundation.VersionControl");
+        }
+
 	    private HatPackage _hat = null;
 	    virtual public HatPackage HatterasPackage
 	    {
@@ -219,7 +230,7 @@ namespace Pendletron.Vsix.Core
         virtual public ILocaterWorkspace GetWorkspaceForSolutionPath(string localFilePath)
 		{
 			dynamic vcServer = HatterasPackage.GetVersionControlServer();
-			Workspace workspace = vcServer.GetWorkspace(localFilePath);
+			dynamic workspace = vcServer.GetWorkspace(localFilePath);
             return new TfsWorkspaceLocatorDecorator(workspace);
 		}
 
