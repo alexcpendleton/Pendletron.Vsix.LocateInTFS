@@ -79,6 +79,9 @@ namespace Pendletron.Vsix.LocateInTFS
                 case 10:
                     results = new LocationService(this);
                     break;
+                case 11:
+                    results = new _2012_DynamicishLocator(this);
+                    break;
                 case 12:
                     results = new DynamicishLocator(this);
                     break;

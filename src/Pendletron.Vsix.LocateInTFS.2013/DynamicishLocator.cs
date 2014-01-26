@@ -274,6 +274,11 @@ namespace Pendletron.Vsix.LocateInTFS
 	            if (_explorerScc == null)
 	            {
                     dynamic explorerSccDiag = new AccessPrivateWrapper(HatterasPackage._wrapped.ExplorerSccDiagProvider);
+                    if (explorerSccDiag.m_explorerScc == null)
+                    {
+                        // if the tool window hasn't been opened yet "explorer" will be null, so we make sure it has opened at least once via ExecuteCommand
+                        DTEInstance.ExecuteCommand("View.TfsSourceControlExplorer");
+                    }
                     _explorerScc = new AccessPrivateWrapper(explorerSccDiag.m_explorerScc);
 	            }
 	            return _explorerScc;
