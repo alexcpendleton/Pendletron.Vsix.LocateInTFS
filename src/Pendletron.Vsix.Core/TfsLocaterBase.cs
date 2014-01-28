@@ -52,7 +52,7 @@ namespace Pendletron.Vsix.Core
             RegisterCommands();
 		}
 
-        public Dictionary<Guid, CommandItem> CommandMap { get; set; }
+        public Dictionary<int, CommandItem> CommandMap { get; set; }
 
 	    public class CommandItem
 	    {
@@ -73,24 +73,18 @@ namespace Pendletron.Vsix.Core
 
 	    public void RegisterCommands()
 	    {
-            /*
-             * 
-			var solutionExplorerCommand = new SolutionExplorerLocateCommand(this, Package);
-			var activeWindowCommand = new ActiveWindowLocateCommand(this, Package);
-			solutionExplorerCommand.RegisterCommand();
-			activeWindowCommand.RegisterCommand();*/
 	        var commandService = Package.GetServiceAsDynamic(typeof (IMenuCommandService)) as IMenuCommandService;
 	        if (commandService != null)
 	        {
-                CommandMap = new Dictionary<Guid, CommandItem>();
+                CommandMap = new Dictionary<int, CommandItem>();
 	            var activeWindow = new ActiveWindowLocateCommand(this, Package);
                 MenuCommand cmd = activeWindow.RegisterCommand();
-	            CommandMap[cmd.CommandID.Guid] = new CommandItem(activeWindow, cmd);
+	            CommandMap[activeWindow.CommandID] = new CommandItem(activeWindow, cmd);
 
 	            
 	            var solutionExplorer = new SolutionExplorerLocateCommand(this, Package);
 	            cmd = solutionExplorer.RegisterCommand();
-                CommandMap[cmd.CommandID.Guid] = new CommandItem(solutionExplorer, cmd);
+                CommandMap[solutionExplorer.CommandID] = new CommandItem(solutionExplorer, cmd);
 	        }
 	    }
 
@@ -181,7 +175,7 @@ namespace Pendletron.Vsix.Core
 		{
 			if (DTEInstance.ActiveDocument != null)
 			{
-				return DTEInstance.ActiveDocument.Path;
+				return DTEInstance.ActiveDocument.FullName;
 			}
 			return "";
 		}
@@ -279,7 +273,7 @@ namespace Pendletron.Vsix.Core
 
         virtual public int CommandExecute(ICommandExecParams e)
         {
-            Guid commandID = e.CmdGroup;
+            int commandID = Convert.ToInt32(e.CommandID);
             if (CommandMap.ContainsKey(commandID))
             {
                 var mappedCommand = CommandMap[commandID];
@@ -292,9 +286,9 @@ namespace Pendletron.Vsix.Core
         virtual public IQueryStatusResult CommandBeforeQueryStatus(ICommandQueryStatusParams e)
         {
             var result = new QueryStatusResult();
-            Guid commandID = e.CmdGroup;
             var prgcmds = (OLECMD[])e.PrgCmds;
             uint wtfisthis = prgcmds[0].cmdf;
+            int commandID = Convert.ToInt32(prgcmds[0].cmdID);
 
             if (CommandMap.ContainsKey(commandID))
             {

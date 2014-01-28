@@ -147,6 +147,8 @@ namespace Pendletron.Vsix.LocateInTFS
 					packageIDs.guidVisualStudio_LocateInTFS_VSIPCmdSet = GuidList.guidVisualStudio_LocateInTFS_VSIPCmdSet;
 					packageIDs.guidVisualStudio_LocateInTFS_VSIPCmdSetString = GuidList.guidVisualStudio_LocateInTFS_VSIPCmdSetString;
 					packageIDs.guidVisualStudio_LocateInTFS_VSIPPkgString = GuidList.guidVisualStudio_LocateInTFS_VSIPPkgString;
+				    packageIDs.cmdidLocateInTFS_CodeWindow = 0x0110;
+				    packageIDs.cmdidLocateInTFS_SolutionExplorer = 0x0100;
 				}
 				return packageIDs;
 			}

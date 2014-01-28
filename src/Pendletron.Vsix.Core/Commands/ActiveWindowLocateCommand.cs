@@ -1,3 +1,5 @@
+using System;
+
 namespace Pendletron.Vsix.Core.Commands
 {
 	public class ActiveWindowLocateCommand : LocateCommand
@@ -12,5 +14,10 @@ namespace Pendletron.Vsix.Core.Commands
 		{
 			return Locater.GetSelectedPathFromActiveDocument();
 		}
+
+	    public override bool BeforeQueryStatus(object sender, EventArgs e)
+	    {
+	        return base.BeforeQueryStatus(sender, e);
+	    }
 	}
 }
