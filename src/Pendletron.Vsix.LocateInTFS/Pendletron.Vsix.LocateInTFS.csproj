@@ -13,7 +13,7 @@
     <AssemblyName>Pendletron.Vsix.LocateInTFS</AssemblyName>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>Key.snk</AssemblyOriginatorKeyFile>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -47,7 +47,7 @@
     <WarningLevel>4</WarningLevel>
     <DeployExtension>True</DeployExtension>
     <CopyVsixExtensionFiles>True</CopyVsixExtensionFiles>
-    <CopyVsixExtensionLocation>C:\Users\Alex\AppData\Local\Microsoft\VisualStudio\10.0Exp\Extensions</CopyVsixExtensionLocation>
+    <CopyVsixExtensionLocation>C:\Users\Alex\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions</CopyVsixExtensionLocation>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
