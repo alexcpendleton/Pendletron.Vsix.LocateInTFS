@@ -82,7 +82,7 @@
 				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
 					<CommandName>cmdidLocateInTFS_SolutionExplorer</CommandName>
-					<ButtonText>Locate In TFS</ButtonText>
+					<ButtonText>&amp;Locate in TFS</ButtonText>
 				</Strings>
 			</Button>
 			<Button guid="guidVisualStudio_LocateInTFS_VSIPCmdSet" id="cmdidLocateInTFS_CodeWindow" priority="0x0100" type="Button">
@@ -91,7 +91,7 @@
 				<CommandFlag>DynamicVisibility</CommandFlag>
 				<Strings>
 					<CommandName>cmdidLocateInTFS_CodeWindow</CommandName>
-					<ButtonText>Locate In TFS</ButtonText>
+					<ButtonText>&amp;Locate in TFS</ButtonText>
 				</Strings>
 			</Button>
 		</Buttons>
