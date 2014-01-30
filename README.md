@@ -5,9 +5,8 @@ It was inspired by several extensions that have a "Locate in Solution Explorer" 
 
 ##What it looks like:
 
-![Solution Explorer Screenshot](/assets/Screenshots/SolutionExplorer.png)
-![Active Document Screenshot](/assets/Screenshots/ActiveDocument.png)
+![Screenshot](/src/Pendletron.Vsix.LocateInTFS/Resources/LocateInTFS_Screenshot.png)
 
-Icon attribution: http://glyphicons.com/
+Icon attribution: http://freecns.yanlu.de/
 
 Open source, MIT license. 
