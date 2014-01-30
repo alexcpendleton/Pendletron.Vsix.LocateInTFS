@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -25,23 +26,16 @@ namespace Pendletron.Vsix.Core.Locaters
             catch { }
             return base.IsVersionControlled(selectedPath);
         }
-
+        public static int debugThing = 1;
         public override void Locate(string localPath)
         {
-            //var _vcAssembly = Assembly.Load("Microsoft.VisualStudio.TeamFoundation.VersionControl");
-            //Type t = _vcAssembly.GetType("Microsoft.VisualStudio.TeamFoundation.VersionControl.HatPackage");
-
             dynamic vcs = HatterasPackage.HatterasService.VersionControlServer;
-            //var wsInstance = Activator.CreateInstance(wsType);
             var workspace = vcs.GetWorkspace(localPath);
-
-            //var prop = t.GetProperty("Instance", BindingFlags.NonPublic | BindingFlags.Static);
-            //object instance = prop.GetValue(null, null);
-
-            //var openSce = t.GetMethod("OpenSceToPath", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
             string serverPath = workspace.TryGetServerItemForLocalItem(localPath);
-            //openSce.Invoke(instance, new object[] { serverPath, workspace });
 
+            // If you call OpenSceToPath to the same directory, it will mess up and won't show any files
+            // So we clear whatever was there before, first
+            HatterasPackage._wrapped.OpenSceToPath("$/", workspace);
             HatterasPackage._wrapped.OpenSceToPath(serverPath, workspace);
         }
 
