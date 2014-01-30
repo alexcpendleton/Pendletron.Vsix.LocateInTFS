@@ -47,7 +47,7 @@
     <WarningLevel>4</WarningLevel>
     <DeployExtension>True</DeployExtension>
     <CopyVsixExtensionFiles>True</CopyVsixExtensionFiles>
-    <CopyVsixExtensionLocation>C:\Users\Alex\AppData\Local\Microsoft\VisualStudio\11.0Exp\Extensions</CopyVsixExtensionLocation>
+    <CopyVsixExtensionLocation>C:\Users\Alex\AppData\Local\Microsoft\VisualStudio\12.0Exp\Extensions</CopyVsixExtensionLocation>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -176,6 +176,10 @@
     <None Include="Resources\Images_32bit.bmp" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Screenshot_200x200.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Resource Include="Notes.txt" />
     <Content Include="MIT-LICENSE.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
