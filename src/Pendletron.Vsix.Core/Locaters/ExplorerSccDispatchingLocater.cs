@@ -95,7 +95,7 @@ namespace Pendletron.Vsix.LocateInTFS
             // If it's already open and connected there's no need to poll
             if (!explorer.IsDisconnected)
             {
-                OpenSceToPathWithPrecedingCall(serverPath, workspace);
+                OpenSceToPathWithPrecedingCall(serverPath, workspace, explorer);
             }
             else
             {
@@ -120,7 +120,7 @@ namespace Pendletron.Vsix.LocateInTFS
                         {
                             // The explorer is connected, so we're ready to go
                             timer.Stop();
-                            OpenSceToPathWithPrecedingCall(serverPath, workspace);
+                            OpenSceToPathWithPrecedingCall(serverPath, workspace, explorer);
                         }
                         else
                         {
@@ -139,12 +139,14 @@ namespace Pendletron.Vsix.LocateInTFS
             HatterasPackage._wrapped.OpenSceToPath(serverPath, workspace);
         }
 
-        virtual public void OpenSceToPathWithPrecedingCall(string serverPath, object workspace)
+        virtual public void OpenSceToPathWithPrecedingCall(string serverPath, object workspace, dynamic explorer)
         {
             // If you call OpenSceToPath to the same directory, it will mess up and won't show any files
             // So we clear whatever was there before navigating to the desired path
             OpenSceToSinglePath("$/", workspace);
             OpenSceToSinglePath(serverPath, workspace);
+
+            DispatchScrollToSccExplorerSelection(ScrollToDispatchLagTime, explorer);
         }
 
         public override void ShowInExplorer(string serverItem)

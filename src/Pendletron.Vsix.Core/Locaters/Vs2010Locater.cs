@@ -34,6 +34,9 @@ namespace Pendletron.Vsix.LocateInTFS
                     if (navMethod != null)
                     {
                         navMethod.Invoke(toolWindowSccExplorerInstance, new object[] { serverItem });
+                        dynamic dynEx = new AccessPrivateWrapper(toolWindowSccExplorerInstance);
+                        dynamic x2 = new AccessPrivateWrapper(dynEx.SccExplorer);
+                        DispatchScrollToSccExplorerSelection(ScrollToDispatchLagTime, x2);
                     }
                 }
             }

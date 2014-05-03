@@ -2,6 +2,7 @@
 using System.CodeDom;
 using System.ComponentModel.Design;
 using System.Reflection;
+using System.Windows.Threading;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.OLE.Interop;
@@ -14,7 +15,6 @@ namespace Pendletron.Vsix.Core
 {
     abstract public class TfsLocaterBase : ITfsLocater
     {
-
         private Assembly _tfsVersionControlAssembly = null;
         public Assembly TfsVersionControlAssembly
         {
@@ -41,9 +41,11 @@ namespace Pendletron.Vsix.Core
 	    public TfsLocaterBase(ILocateInTfsVsPackage pkg)
 		{
 			Package = pkg;
+	        ScrollToDispatchLagTime = TimeSpan.FromSeconds(0.6);
 		}
 
-		public ILocateInTfsVsPackage Package { get; set; }
+        public ILocateInTfsVsPackage Package { get; set; }
+        public TimeSpan ScrollToDispatchLagTime { get; set; }
 
 		public void Initialize()
 		{
@@ -251,5 +253,34 @@ namespace Pendletron.Vsix.Core
             result.ReturnValue = 0;
             return result;
         }
+        
+        virtual public void DispatchScrollToSccExplorerSelection(TimeSpan interval, dynamic explorer)
+        {
+            DispatcherTimer timer = new DispatcherTimer()
+            {
+                Interval = interval,
+                Tag = 0
+            };
+            timer.Tick += (sender, args) =>
+            {
+                timer.Stop();
+                ScrollToSccExplorerSelection(explorer);
+            };
+            timer.Start();
+        }
+
+        virtual public void ScrollToSccExplorerSelection(dynamic explorer)
+        {
+            dynamic listView = explorer.listViewExplorer;
+            if (listView != null)
+            {
+                if (listView.SelectedIndices.Count > 0)
+                {
+                    int selectedIndex = listView.SelectedIndices[0];
+                    listView.EnsureVisible(selectedIndex);
+                }
+            }
+        }
+
     }
 }
