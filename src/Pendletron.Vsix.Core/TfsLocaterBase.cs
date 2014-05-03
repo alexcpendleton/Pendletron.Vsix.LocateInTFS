@@ -7,8 +7,6 @@ using EnvDTE80;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using System.Collections.Generic;
-using Microsoft.TeamFoundation.VersionControl.Client;
-using Microsoft.TeamFoundation.Client;
 using Pendletron.Vsix.Core.Commands;
 using Pendletron.Vsix.Core.Wrappers;
 
@@ -93,15 +91,10 @@ namespace Pendletron.Vsix.Core
 		{
 		    bool isVersionControlled = false;
 		    try
-			{
-				GetWorkspaceForPath(selectedPath, ws =>
-				{
-					if (ws != null) 
-                    {
-						isVersionControlled = true;
-					}
-				});
-			}
+		    {
+		        string serverPath = GetServerPathFromLocal(selectedPath);
+		        isVersionControlled = !String.IsNullOrWhiteSpace(serverPath);
+		    }
 			catch (Exception)
 			{
 				isVersionControlled = false;
@@ -198,56 +191,7 @@ namespace Pendletron.Vsix.Core
 			return localPath;
 		}
 
-		virtual protected void GetWorkspaceForPath(string localFilePath, Action<ILocaterWorkspace> ifFound)
-		{
-			// Needed to change this to use a callback because if it's a non-solution 
-			// path then the TFS collection gets disposed
-			ILocaterWorkspace workspace = null;
-			try
-			{
-				// TODO: Should probably check if solution is connected to TFS instead of wrapping
-				// this in a try/catch
-				workspace = GetWorkspaceForSolutionPath(localFilePath);
-			} catch(Exception) { }
-
-			if (workspace == null)
-			{
-				// Not a file from  this solution, get it another way
-				GetWorkspaceForNonSolutionPath(localFilePath, ifFound);
-			}
-			else
-			{
-				ifFound(workspace);
-			}
-		}
-
-        virtual public ILocaterWorkspace GetWorkspaceForSolutionPath(string localFilePath)
-		{
-			dynamic vcServer = HatterasPackage.GetVersionControlServer();
-			dynamic workspace = vcServer.GetWorkspace(localFilePath);
-            return new TfsWorkspaceLocatorDecorator(workspace);
-		}
-
-        virtual public void GetWorkspaceForNonSolutionPath(string localFilePath, Action<ILocaterWorkspace> ifFound)
-		{
-			Workstation station = Workstation.Current;
-			Workspace result = null;
-			if (station != null)
-			{
-				var wsInfo = station.GetLocalWorkspaceInfo(localFilePath);
-				using(var collection = new TfsTeamProjectCollection(wsInfo.ServerUri))
-				{
-					if (collection != null)
-					{
-						result = wsInfo.GetWorkspace(collection);
-						if (result != null)
-						{
-							ifFound(new TfsWorkspaceLocatorDecorator(result));
-						}
-					}
-				}
-			}
-		}
+        public abstract string GetServerPathFromLocal(string localFilePath);
 
 		virtual public void Locate(string localPath)
 		{
@@ -256,10 +200,9 @@ namespace Pendletron.Vsix.Core
             
 			string localFilePath = localPath;
 			string serverItem = "";
-			try {
-				GetWorkspaceForPath(localFilePath, workspace => {
-					serverItem = workspace.TryGetServerItemForLocalItem(localFilePath);
-				});
+			try
+			{
+			    serverItem = GetServerPathFromLocal(localFilePath);
 			}
 			catch (Exception) { }
 

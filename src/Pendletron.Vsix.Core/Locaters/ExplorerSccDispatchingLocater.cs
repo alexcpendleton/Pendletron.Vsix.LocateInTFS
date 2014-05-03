@@ -44,16 +44,38 @@ namespace Pendletron.Vsix.LocateInTFS
 	        }
 	    }
 
+	    protected class ServerItemAndWorkspace
+	    {
+	        public ServerItemAndWorkspace()
+	        {
+	            
+	        }
+
+	        public ServerItemAndWorkspace(dynamic workspace, string serverPath)
+	        {
+	            Workspace = workspace;
+	            ServerPath = serverPath;
+	        }
+
+	        public dynamic Workspace { get; set; }
+            public string ServerPath { get; set; }
+	    }
+
         public override void Locate(string localPath)
         {
-            dynamic vcs = HatterasPackage.HatterasService.VersionControlServer;
-            var workspace = vcs.GetWorkspace(localPath);
-            string serverPath = workspace.TryGetServerItemForLocalItem(localPath);
-
+            var info = GetServerItemAndWorkspaceForLocalPath(localPath);
             //HatterasPackage._wrapped.OpenSceToPath("$/", workspace);
             //HatterasPackage._wrapped.OpenSceToPath(serverPath, workspace);
-            DispatchOpenSceToPath(serverPath, workspace);
+            DispatchOpenSceToPath(info.ServerPath, info.Workspace);
         }
+
+	    protected virtual ServerItemAndWorkspace GetServerItemAndWorkspaceForLocalPath(string localPath)
+	    {
+            dynamic vcs = HatterasPackage.HatterasService.VersionControlServer;
+            dynamic workspace = vcs.GetWorkspace(localPath);
+            string serverPath = workspace.TryGetServerItemForLocalItem(localPath);
+            return new ServerItemAndWorkspace(workspace, serverPath);
+	    }
 
 
         virtual public void DispatchOpenSceToPath(string serverPath, object workspace)
@@ -128,6 +150,12 @@ namespace Pendletron.Vsix.LocateInTFS
         public override void ShowInExplorer(string serverItem)
         {
             DispatchOpenSceToPath(serverItem, null);
+        }
+
+        public override string GetServerPathFromLocal(string localFilePath)
+        {
+            var info = GetServerItemAndWorkspaceForLocalPath(localFilePath);
+            return info.ServerPath;
         }
     }
 }

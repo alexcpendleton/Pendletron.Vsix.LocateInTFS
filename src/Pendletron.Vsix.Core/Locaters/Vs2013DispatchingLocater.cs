@@ -3,7 +3,6 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
-using Microsoft.TeamFoundation.VersionControl.Client;
 using Pendletron.Vsix.Core.Wrappers;
 using Pendletron.Vsix.LocateInTFS;
 using System;

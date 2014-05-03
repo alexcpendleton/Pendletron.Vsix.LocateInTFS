@@ -3,12 +3,10 @@ using System.ComponentModel.Design;
 using System.Reflection;
 using EnvDTE;
 using EnvDTE80;
-using Microsoft.TeamFoundation.VersionControl.Client;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Pendletron.Vsix.Core.Wrappers;
 using System.Collections.Generic;
-using Microsoft.TeamFoundation.Client;
 using Pendletron.Vsix.Core;
 using Pendletron.Vsix.Core.Commands;
 
@@ -40,5 +38,21 @@ namespace Pendletron.Vsix.LocateInTFS
                 }
             }
 	    }
+
+        public override string GetServerPathFromLocal(string localFilePath)
+        {
+            string serverPath = "";
+            try
+            {
+                dynamic vcs = HatterasPackage.HatterasService.VersionControlServer;
+                dynamic workspace = vcs.GetWorkspace(localFilePath);
+                serverPath = workspace.TryGetServerItemForLocalItem(localFilePath);
+            }
+            catch
+            {
+                serverPath = "";
+            }
+            return serverPath;
+        }
     }
 }

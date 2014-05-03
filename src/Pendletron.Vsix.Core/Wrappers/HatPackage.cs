@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Reflection;
-using Microsoft.TeamFoundation.VersionControl.Client;
 
 namespace Pendletron.Vsix.Core.Wrappers
 {

@@ -1,5 +1,4 @@
-﻿using Microsoft.TeamFoundation.VersionControl.Client;
-
+﻿
 namespace Pendletron.Vsix.Core
 {
     public class TfsWorkspaceLocatorDecorator : ILocaterWorkspace
