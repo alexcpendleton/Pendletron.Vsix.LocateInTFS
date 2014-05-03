@@ -63,10 +63,10 @@
     <Compile Include="ILocateInTfsVsPackage.cs" />
     <Compile Include="ILocaterWorkspace.cs" />
     <Compile Include="IVsPackageIdentifiers.cs" />
-    <Compile Include="Locaters\ExplorerSccLocater.cs" />
+    <Compile Include="Locaters\ExplorerSccDispatchingLocater.cs" />
     <Compile Include="Locaters\Vs2010Locater.cs" />
-    <Compile Include="Locaters\Vs2012Locater.cs" />
-    <Compile Include="Locaters\Vs2013Locater.cs" />
+    <Compile Include="Locaters\Vs2012DispatchingLocater.cs" />
+    <Compile Include="Locaters\Vs2013DispatchingLocater.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TfsLocaterBase.cs" />
     <Compile Include="TfsWorkspaceLocatorDecorator.cs" />

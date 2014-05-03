@@ -1,20 +1,23 @@
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
-using Microsoft.TeamFoundation.VersionControl.Client;
-using Pendletron.Vsix.Core.Wrappers;
-using Pendletron.Vsix.LocateInTFS;
 using System;
+using System.CodeDom;
+using System.ComponentModel.Design;
+using System.Reflection;
 using System.Windows.Threading;
+using EnvDTE;
+using EnvDTE80;
+using Microsoft.VisualStudio.OLE.Interop;
+using Microsoft.VisualStudio.Shell;
+using Pendletron.Vsix.Core.Commands;
+using Pendletron.Vsix.Core.Wrappers;
+using System.Collections.Generic;
+using Pendletron.Vsix.Core;
 
-namespace Pendletron.Vsix.Core.Locaters
+namespace Pendletron.Vsix.LocateInTFS
 {
-    public class Vs2013Locater : ExplorerSccLocater
-    {
-        public Vs2013Locater(ILocateInTfsVsPackage package) : base(package)
-        {
+	public abstract class ExplorerSccDispatchingLocater : TfsLocaterBase
+	{
+        public ExplorerSccDispatchingLocater(ILocateInTfsVsPackage package):base(package) 
+        { 
             DispatchPollTime = TimeSpan.FromSeconds(0.5);
             MaxDispatchAttempts = 10;
         }
@@ -22,34 +25,38 @@ namespace Pendletron.Vsix.Core.Locaters
         public TimeSpan DispatchPollTime { get; set; }
         public int MaxDispatchAttempts { get; set; }
 
-        public override bool IsVersionControlled(string selectedPath)
-        {
-            try
-            {
-                // Could be a git context, not currently supported
-                bool isTfsContext = HatterasPackage.HatterasService.IsCurrentContextTFVC;
-                if (!isTfsContext)
-                {
-                    return false;
-                }
-            }
-            catch { }
-            return base.IsVersionControlled(selectedPath);
-        }
+	    protected dynamic _explorerScc = null;
+	    virtual public dynamic ExplorerScc
+	    {
+	        get
+	        {
+	            if (_explorerScc == null)
+	            {
+                    dynamic explorerSccDiag = new AccessPrivateWrapper(HatterasPackage._wrapped.ExplorerSccDiagProvider);
+                    if (explorerSccDiag.m_explorerScc == null)
+                    {
+                        // if the tool window hasn't been opened yet "explorer" will be null, so we make sure it has opened at least once via ExecuteCommand
+                        //HatterasPackage._wrapped.OpenSCE();
+                    }
+                    _explorerScc = new AccessPrivateWrapper(explorerSccDiag.m_explorerScc);
+	            }
+	            return _explorerScc;
+	        }
+	    }
 
         public override void Locate(string localPath)
         {
             dynamic vcs = HatterasPackage.HatterasService.VersionControlServer;
             var workspace = vcs.GetWorkspace(localPath);
             string serverPath = workspace.TryGetServerItemForLocalItem(localPath);
-            
+
             //HatterasPackage._wrapped.OpenSceToPath("$/", workspace);
             //HatterasPackage._wrapped.OpenSceToPath(serverPath, workspace);
             DispatchOpenSceToPath(serverPath, workspace);
         }
 
 
-        public void DispatchOpenSceToPath(string serverPath, object workspace)
+        virtual public void DispatchOpenSceToPath(string serverPath, object workspace)
         {
             /* In VS2013 (unlike VS2010) the Source Control Explorer opens asynchronously. This caused an issue that when
              * the SCE was not open and "Locate in TFS" was clicked we would not be able to open the SCE to the correct place
@@ -62,7 +69,7 @@ namespace Pendletron.Vsix.Core.Locaters
             // This will make sure the SCE window is open, or will open
             dynamic sccToolWindow = new AccessPrivateWrapper(HatterasPackage._wrapped.GetToolWindowSccExplorer(true));
             dynamic explorer = new AccessPrivateWrapper(sccToolWindow.SccExplorer);
-            
+
             // If it's already open and connected there's no need to poll
             if (!explorer.IsDisconnected)
             {
@@ -105,12 +112,12 @@ namespace Pendletron.Vsix.Core.Locaters
 
         }
 
-        public void OpenSceToSinglePath(string serverPath, object workspace)
+        virtual public void OpenSceToSinglePath(string serverPath, object workspace)
         {
             HatterasPackage._wrapped.OpenSceToPath(serverPath, workspace);
         }
 
-        public void OpenSceToPathWithPrecedingCall(string serverPath, object workspace)
+        virtual public void OpenSceToPathWithPrecedingCall(string serverPath, object workspace)
         {
             // If you call OpenSceToPath to the same directory, it will mess up and won't show any files
             // So we clear whatever was there before navigating to the desired path
