@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define TRACE
+using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
@@ -46,6 +47,7 @@ namespace Pendletron.Vsix.LocateInTFS
 		/// </summary>
 		public VisualStudio_LocateInTFS_VSIPPackage()
 		{
+		    Trace.Listeners.Add(new TextWriterTraceListener(@"c:\temp\LitTrace.txt"));
 			Trace.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
 		}
 
