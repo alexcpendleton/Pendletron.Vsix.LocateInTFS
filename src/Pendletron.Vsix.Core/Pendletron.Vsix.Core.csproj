@@ -62,6 +62,7 @@
     <Compile Include="ILocateInTfsVsPackage.cs" />
     <Compile Include="ILocaterWorkspace.cs" />
     <Compile Include="IVsPackageIdentifiers.cs" />
+    <Compile Include="Locaters\DispatchedPoller.cs" />
     <Compile Include="Locaters\ExplorerSccDispatchingLocater.cs" />
     <Compile Include="Locaters\Vs2010Locater.cs" />
     <Compile Include="Locaters\Vs2012DispatchingLocater.cs" />

@@ -35,5 +35,7 @@
       <Name>Visual Studio MPF</Name>
     </Reference>
   </References>
-  <Content />
+  <Content>
+    <VsPackage>Pendletron.Vsix.LocateInTFS.pkgdef</VsPackage>
+  </Content>
 </Vsix>

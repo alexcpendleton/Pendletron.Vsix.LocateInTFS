@@ -2,7 +2,6 @@ using System;
 using System.CodeDom;
 using System.ComponentModel.Design;
 using System.Reflection;
-using System.Windows.Threading;
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.OLE.Interop;
@@ -78,7 +77,7 @@ namespace Pendletron.Vsix.LocateInTFS
 	    }
 
 
-        virtual public void DispatchOpenSceToPath(string serverPath, object workspace)
+	    virtual public void DispatchOpenSceToPath(string serverPath, object workspace)
         {
             /* In VS2013 (unlike VS2010) the Source Control Explorer opens asynchronously. This caused an issue that when
              * the SCE was not open and "Locate in TFS" was clicked we would not be able to open the SCE to the correct place
@@ -91,47 +90,19 @@ namespace Pendletron.Vsix.LocateInTFS
             // This will make sure the SCE window is open, or will open
             dynamic sccToolWindow = new AccessPrivateWrapper(HatterasPackage._wrapped.GetToolWindowSccExplorer(true));
             dynamic explorer = new AccessPrivateWrapper(sccToolWindow.SccExplorer);
-
-            // If it's already open and connected there's no need to poll
-            if (!explorer.IsDisconnected)
+            
+            // We don't want to loop infinitely, if we've tried a few times and it's still not connected then just give up
+            // By default this will be about five seconds (10 attempts, 0.5 seconds interval)
+            var poller = new DispatchedPoller(MaxDispatchAttempts, DispatchPollTime, () =>
             {
+                return !explorer.IsDisconnected;
+            },
+            () =>
+            {
+                // The explorer is connected, so we're ready to go
                 OpenSceToPathWithPrecedingCall(serverPath, workspace, explorer);
-            }
-            else
-            {
-                int attemptsMade = 0;
-                DispatcherTimer timer = new DispatcherTimer()
-                {
-                    Interval = DispatchPollTime,
-                    Tag = 0
-                };
-                timer.Tick += (sender, args) =>
-                {
-                    // We don't want to loop infinitely, if we've tried a few times and it's still not connected then just give up
-                    // By default this will be about five seconds (10 attempts, 0.5 seconds interval)
-                    if (attemptsMade == MaxDispatchAttempts)
-                    {
-                        // Give up, something bad happened
-                        timer.Stop();
-                    }
-                    else
-                    {
-                        if (!explorer.IsDisconnected)
-                        {
-                            // The explorer is connected, so we're ready to go
-                            timer.Stop();
-                            OpenSceToPathWithPrecedingCall(serverPath, workspace, explorer);
-                        }
-                        else
-                        {
-                            // Keep the timer going and try again a few more times
-                            attemptsMade++;
-                        }
-                    }
-                };
-                timer.Start();
-            }
-
+            });
+            poller.Go();
         }
 
         virtual public void OpenSceToSinglePath(string serverPath, object workspace)

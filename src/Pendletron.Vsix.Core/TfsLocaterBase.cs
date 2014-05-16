@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.Shell;
 using System.Collections.Generic;
 using Pendletron.Vsix.Core.Commands;
 using Pendletron.Vsix.Core.Wrappers;
+using Pendletron.Vsix.LocateInTFS;
 
 namespace Pendletron.Vsix.Core
 {
@@ -256,31 +257,18 @@ namespace Pendletron.Vsix.Core
         
         virtual public void DispatchScrollToSccExplorerSelection(TimeSpan interval, dynamic explorer)
         {
-            DispatcherTimer timer = new DispatcherTimer()
-            {
-                Interval = interval,
-                Tag = 0
-            };
-            timer.Tick += (sender, args) =>
-            {
-                timer.Stop();
-                ScrollToSccExplorerSelection(explorer);
-            };
-            timer.Start();
-        }
-
-        virtual public void ScrollToSccExplorerSelection(dynamic explorer)
-        {
             dynamic listView = explorer.listViewExplorer;
-            if (listView != null)
-            {
-                if (listView.SelectedIndices.Count > 0)
-                {
-                    int selectedIndex = listView.SelectedIndices[0];
-                    listView.EnsureVisible(selectedIndex);
-                }
-            }
-        }
+            if (listView == null) return;
 
+            Func<bool> condition = () => listView.SelectedIndices.Count > 0;
+            Action todo = () =>
+            {
+                int selectedIndex = listView.SelectedIndices[0];
+                listView.EnsureVisible(selectedIndex);
+            };
+
+            var poller = new DispatchedPoller(10, TimeSpan.FromSeconds(0.25), condition, todo);
+            poller.Go();
+        }
     }
 }
