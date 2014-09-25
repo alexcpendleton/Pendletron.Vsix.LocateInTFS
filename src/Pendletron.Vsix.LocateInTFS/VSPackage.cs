@@ -119,9 +119,13 @@ namespace Pendletron.Vsix.LocateInTFS
 		{
 			var d = GetDteAsDynamic();
 			string version = d.Version;
-	        double result = 0;
-	        Double.TryParse(version, out result);
-	        return Convert.ToInt32(Math.Floor(result));
+			if (version.Contains("."))
+			{
+				version = version.Remove(version.IndexOf('.'));
+			}
+			int result = 0;
+			Int32.TryParse(version, out result);
+			return result;
 		}
 
 		public dynamic GetServiceAsDynamic(Type serviceInterfaceType)
