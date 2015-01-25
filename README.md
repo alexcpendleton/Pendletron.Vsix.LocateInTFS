@@ -1,4 +1,4 @@
-#Locate in TFS - Visual Studio Extension (2010, 2012, 2013) 
+#Locate in TFS - Visual Studio Extension (2010, 2012, 2013)
 Opens up the Source Control Explorer window to the location of the currently selected file. This works from the Solution Explorer and from the active document.
 
 Latest version: 1.1.0 (May 16, 2014)
@@ -10,6 +10,12 @@ Latest version: 1.1.0 (May 16, 2014)
 ----------
 
 ##Changelog
+
+###v1.1.1 (January 25, 2015)
+
+**Bug fixes**
+
+- On a system that uses a european culture info the version string "12.0" is converted to a double with the value 120. This should fix some of the null reference exceptions that some of you have reported. Thanks to **sitofabi** for the diagnosis and pull request.
 
 ###v1.1.0 (May 16, 2014)
 
@@ -25,7 +31,7 @@ Latest version: 1.1.0 (May 16, 2014)
 
 Icon attribution: [http://freecns.yanlu.de/](http://freecns.yanlu.de/)
 
-Open source, MIT license. 
+Open source, MIT license.
 
 ----------
 
