@@ -3,7 +3,7 @@
   <Identifier Id="8e7c7ec6-736b-42a6-8a02-301d0f80a1f3">
     <Name>Locate in TFS</Name>
     <Author>Alex Pendleton</Author>
-    <Version>1.1.1</Version>
+    <Version>1.2.1</Version>
     <Description xml:space="preserve">Opens the Source Control Explorer for the currently selected item in the solution explorer or active document. Source is available at the More Info Url.
     </Description>
     <Locale>1033</Locale>
