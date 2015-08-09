@@ -12,7 +12,7 @@ Latest version: 1.2.1 (August 9, 2015)
 ##Changelog
 
 ###v1.2.1 (August 9, 2015)
-- Updated for Visual Studio 2015. Thanks to [arangas](https://github.com/arangas) for the pull request.
+- Updated for Visual Studio 2015. Thanks to [holm0563](https://github.com/holm0563) for the pull request.
 
 ###v1.1.1 (January 25, 2015)
 
