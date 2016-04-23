@@ -98,7 +98,7 @@ namespace Pendletron.Vsix.LocateInTFS
             return realPath;
         }
 
-        private dynamic TryGetWorkspace(string path)
+        private dynamic TryGetWorkspace(string path, ref string realPath)
         {
             dynamic vcs = HatterasPackage.HatterasService.VersionControlServer;
             dynamic workspace = null;
@@ -109,15 +109,16 @@ namespace Pendletron.Vsix.LocateInTFS
             }
             catch ( Exception ) { }
 
-            string realPath = GetRealPath(path);
+            realPath = GetRealPath(path);
             workspace = vcs.GetWorkspace(realPath);
             return workspace;
         }
 
         protected virtual ServerItemAndWorkspace GetServerItemAndWorkspaceForLocalPath(string localPath)
 	    {
-            dynamic workspace = TryGetWorkspace(localPath);
-            string serverPath = workspace.TryGetServerItemForLocalItem(localPath);
+            string realPath=localPath;
+            dynamic workspace = TryGetWorkspace(localPath, ref realPath);
+            string serverPath = workspace.TryGetServerItemForLocalItem(realPath);
             return new ServerItemAndWorkspace(workspace, serverPath);
 	    }
 
