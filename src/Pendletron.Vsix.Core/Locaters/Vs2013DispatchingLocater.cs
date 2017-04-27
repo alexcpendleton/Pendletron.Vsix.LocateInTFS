@@ -22,9 +22,9 @@ namespace Pendletron.Vsix.Core.Locaters
             {
                 // Could be a git context, not currently supported
                 bool isTfsContext = HatterasPackage.HatterasService.IsCurrentContextTFVC;
-                if (!isTfsContext)
+                if (isTfsContext)
                 {
-                    return false;
+                    return true;
                 }
             }
             catch { }

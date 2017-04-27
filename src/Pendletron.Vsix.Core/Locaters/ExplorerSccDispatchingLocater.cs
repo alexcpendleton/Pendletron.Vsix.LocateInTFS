@@ -10,6 +10,9 @@ using Pendletron.Vsix.Core.Commands;
 using Pendletron.Vsix.Core.Wrappers;
 using System.Collections.Generic;
 using Pendletron.Vsix.Core;
+using System.Text;
+using System.IO;
+using System.Runtime.InteropServices;
 
 namespace Pendletron.Vsix.LocateInTFS
 {
@@ -68,11 +71,54 @@ namespace Pendletron.Vsix.LocateInTFS
             DispatchOpenSceToPath(info.ServerPath, info.Workspace);
         }
 
-	    protected virtual ServerItemAndWorkspace GetServerItemAndWorkspaceForLocalPath(string localPath)
-	    {
+        [DllImport("kernel32.dll")]
+        static extern uint QueryDosDevice(string lpDeviceName, StringBuilder lpTargetPath, int ucchMax);
+        private static string GetRealPath(string path)
+        {
+            string realPath;
+            StringBuilder pathInformation = new StringBuilder(250);
+
+            // Get the drive letter of the
+            string driveLetter = Path.GetPathRoot(path).Replace("\\", "");
+            QueryDosDevice(driveLetter, pathInformation, 250);
+
+            // If drive is substed, the result will be in the format of "\??\C:\RealPath\".
+            if (pathInformation.ToString().Contains("\\??\\"))
+            {
+                // Strip the \??\ prefix.
+                string realRoot = pathInformation.ToString().Remove(0, 4);
+
+                //Combine the paths.
+                realPath = Path.Combine(realRoot, path.Replace(Path.GetPathRoot(path), ""));
+            }
+            else
+            {
+                realPath = path;
+            }
+            return realPath;
+        }
+
+        private dynamic TryGetWorkspace(string path, ref string realPath)
+        {
             dynamic vcs = HatterasPackage.HatterasService.VersionControlServer;
-            dynamic workspace = vcs.GetWorkspace(localPath);
-            string serverPath = workspace.TryGetServerItemForLocalItem(localPath);
+            dynamic workspace = null;
+            try
+            {
+                workspace = vcs.GetWorkspace(path);
+                return workspace;
+            }
+            catch ( Exception ) { }
+
+            realPath = GetRealPath(path);
+            workspace = vcs.GetWorkspace(realPath);
+            return workspace;
+        }
+
+        protected virtual ServerItemAndWorkspace GetServerItemAndWorkspaceForLocalPath(string localPath)
+	    {
+            string realPath=localPath;
+            dynamic workspace = TryGetWorkspace(localPath, ref realPath);
+            string serverPath = workspace.TryGetServerItemForLocalItem(realPath);
             return new ServerItemAndWorkspace(workspace, serverPath);
 	    }
 
