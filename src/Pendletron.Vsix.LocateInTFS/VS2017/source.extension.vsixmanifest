@@ -1,9 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="8e7c7ec6-736b-42a6-8a02-301d0f80a1f3" Version="1.3.0" Language="en-US" Publisher="Alex Pendleton" />
-    <DisplayName>Locate in TFS</DisplayName>
-    <Description>Opens the Source Control Explorer for the currently selected item in the solution explorer or active document. Source is available at the More Info Url.</Description>
+    <Identity Id="24366582-5787-4bd9-b457-c8a6edf882aa" Version="2.0.0" Language="en-US" Publisher="AlexPendleton" />
+    <DisplayName>Locate in TFS (2017+)</DisplayName>
+    <Description xml:space="preserve">Opens the Source Control Explorer for the currently selected item in the solution explorer or active document. Source is available at the More Info Url.</Description>
+    <MoreInfo>https://github.com/alexcpendleton/Pendletron.Vsix.LocateInTFS</MoreInfo>
+    <License>MIT-LICENSE.txt</License>
+    <ReleaseNotes>Notes.txt</ReleaseNotes>
+    <Icon>Resources\LocateInTFS_Screenshot.png</Icon>
+    <PreviewImage>Resources\Screenshot_200x200.png</PreviewImage>
+    <Tags>find, Locate,Open Source, Source Control Explorer, Team Foundation Server, TFS</Tags>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0,16.0)" />
