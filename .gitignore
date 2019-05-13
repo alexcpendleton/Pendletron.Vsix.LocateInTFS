@@ -28,3 +28,6 @@ obj/
 _ReSharper*/
 [Tt]est[Rr]esult*
 src/packages/
+/src/.localhistory/*
+/src/.vs/*
+/src/UpgradeLog*.htm

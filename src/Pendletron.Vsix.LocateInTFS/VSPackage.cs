@@ -98,6 +98,9 @@ namespace Pendletron.Vsix.LocateInTFS
                 case 17:
                     results = new Vs2013DispatchingLocater(this);
                     break;
+                default:
+                    results = new Vs2013DispatchingLocater(this);
+                    break;
             }
             return results;
         }
