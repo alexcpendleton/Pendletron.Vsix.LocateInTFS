@@ -1,7 +1,7 @@
-# Locate in TFS - Visual Studio Extension (2010, 2012, 2013, 2015, 2017)
-Opens up the Source Control Explorer window to the location of the currently selected file. This works from the Solution Explorer and from the active document. It works in Community editions and better.
+# Locate in TFS - Visual Studio Extension (2010, 2012, 2013, 2015, 2017, 2019)
+Opens up the Source Control Explorer window to the location of the currently selected file. This works from the Solution Explorer and from the active document. It works in Community editions and better. Please note that you must be connected to a TFS instance in your Team Explorer for this extension to work. After installation, you might receive a message that this extension will stop working in a future version. It'll still work fine for now, but maybe I'll actually finish it by VSNext. :)
 
-Latest version (2017+): 2.0.0 (June 21, 2017)
+Latest version (2017+): 3.0.0 (May 13, 2019)
 Latest version (2010-2015): 1.2.1 (August 9, 2015)
 
 ## What it looks like:
@@ -20,6 +20,10 @@ Download it on the Visual Studio Gallery
 ----------
 
 ## Changelog
+### v3.0.0 (May 13, 2019)
+- Updated for Visual Studio 2019. Thanks to [BoredTweak](https://github.com/BoredTweak) for the pull request. Thank you for your assistance and patience. :)
+
+
 ### v2.0.0 (June 21, 2017)
 - Updated for Visual Studio 2017. Thanks to [o-farooq](https://github.com/o-farooq) for the pull request. This required an entirely new package, so the 2010-2015 extension and the 2017+ extension are at different URIs.
 
