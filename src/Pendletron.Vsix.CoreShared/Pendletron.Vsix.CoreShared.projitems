@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects Condition="'$(MSBuildVersion)' == '' Or '$(MSBuildVersion)' &lt; '16.0'">$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>139b10d8-482b-404d-b8e6-cbbffa96943d</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Pendletron.Vsix.CoreShared</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\ActiveWindowLocateCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\LocateCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Commands\SolutionExplorerLocateCommand.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ILocateInTfsVsPackage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ILocaterWorkspace.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ITfsLocater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IVsPackageIdentifiers.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Locaters\DispatchedPoller.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Locaters\ExplorerSccDispatchingLocater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Locaters\Vs2010Locater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Locaters\Vs2012DispatchingLocater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Locaters\Vs2013DispatchingLocater.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TfsLocaterBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)TfsWorkspaceLocatorDecorator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wrappers\AccessPrivateWrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Wrappers\HatPackage.cs" />
+  </ItemGroup>
+</Project>

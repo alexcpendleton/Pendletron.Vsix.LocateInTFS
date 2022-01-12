@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.Shell;
 using Pendletron.Vsix.Core;
 using Pendletron.Vsix.Core.Locaters;
 
+
 namespace Pendletron.Vsix.LocateInTFS
 {
 	/// <summary>

@@ -3,7 +3,6 @@ using System.CodeDom;
 using System.ComponentModel.Design;
 using System.Reflection;
 using EnvDTE;
-using EnvDTE80;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Pendletron.Vsix.Core.Commands;

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="Pendletron.Vsix.LocateInTFS._2022AndLater.3c5aa6a5-230f-4af9-a5bc-f32149ecd5fd" Version="4.0.0" Language="en-US" Publisher="AlexPendleton" />
+	<DisplayName>Locate in TFS (2022+)</DisplayName>
+	  <Description xml:space="preserve">Opens the Source Control Explorer for the currently selected item in the solution explorer or active document. Source is available at the More Info Url.</Description>
+	<MoreInfo>https://github.com/alexcpendleton/Pendletron.Vsix.LocateInTFS</MoreInfo>
+	<License>MIT-LICENSE.txt</License>
+	<ReleaseNotes>Notes.txt</ReleaseNotes>
+	<Icon>Resources\LocateInTFS_Screenshot.png</Icon>
+	<PreviewImage>Resources\Screenshot_200x200.png</PreviewImage>
+	<Tags>find, Locate,Open Source, Source Control Explorer, Team Foundation Server, TFS</Tags>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0, 18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+    </InstallationTarget>
+	<InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[17.0, 18.0)">
+		<ProductArchitecture>amd64</ProductArchitecture>
+	</InstallationTarget>
+	<InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0, 18.0)">
+		<ProductArchitecture>amd64</ProductArchitecture>
+	</InstallationTarget>
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+  </Dependencies>
+  <Prerequisites>
+    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[17.0,18.0)" DisplayName="Visual Studio core editor" />
+  </Prerequisites>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+  </Assets>
+</PackageManifest>
