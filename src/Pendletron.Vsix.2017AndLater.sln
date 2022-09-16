@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26228.4
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32104.313
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "License", "License", "{8419FD6D-0E57-4460-8FCA-7FB8D77F0DDB}"
 	ProjectSection(SolutionItems) = preProject
@@ -12,22 +12,70 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pendletron.Vsix.LocateInTFS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pendletron.Vsix.Core", "Pendletron.Vsix.Core\Pendletron.Vsix.Core.csproj", "{161765BB-4464-4308-8E9A-15F4830D499B}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Pendletron.Vsix.LocateInTFS.Shared", "Pendletron.Vsix.LocateInTFS.2017AndLaterShared\Pendletron.Vsix.LocateInTFS.Shared.shproj", "{9DEFB1ED-8FD7-4D02-B9CD-59B649CAC490}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Pendletron.Vsix.CoreShared", "Pendletron.Vsix.CoreShared\Pendletron.Vsix.CoreShared.shproj", "{139B10D8-482B-404D-B8E6-CBBFFA96943D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pendletron.Vsix.LocateInTFS.2022AndLater", "Pendletron.Vsix.LocateInTFS.2022AndLater\Pendletron.Vsix.LocateInTFS.2022AndLater.csproj", "{BB30BB3D-2F93-475E-8456-92FF579E20BB}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Pendletron.Vsix.CoreShared\Pendletron.Vsix.CoreShared.projitems*{139b10d8-482b-404d-b8e6-cbbffa96943d}*SharedItemsImports = 13
+		Pendletron.Vsix.CoreShared\Pendletron.Vsix.CoreShared.projitems*{161765bb-4464-4308-8e9a-15f4830d499b}*SharedItemsImports = 4
+		Pendletron.Vsix.LocateInTFS.2017AndLaterShared\Pendletron.Vsix.LocateInTFS.2017AndLaterShared.projitems*{9defb1ed-8fd7-4d02-b9cd-59b649cac490}*SharedItemsImports = 13
+		Pendletron.Vsix.LocateInTFS.2017AndLaterShared\Pendletron.Vsix.LocateInTFS.2017AndLaterShared.projitems*{bb30bb3d-2f93-475e-8456-92ff579e20bb}*SharedItemsImports = 4
+		Pendletron.Vsix.LocateInTFS.2017AndLaterShared\Pendletron.Vsix.LocateInTFS.2017AndLaterShared.projitems*{c143ca2e-dc6f-4d70-a9c6-7d3c9e1fb135}*SharedItemsImports = 4
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C143CA2E-DC6F-4D70-A9C6-7D3C9E1FB135}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C143CA2E-DC6F-4D70-A9C6-7D3C9E1FB135}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C143CA2E-DC6F-4D70-A9C6-7D3C9E1FB135}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{C143CA2E-DC6F-4D70-A9C6-7D3C9E1FB135}.Debug|x64.Build.0 = Debug|Any CPU
+		{C143CA2E-DC6F-4D70-A9C6-7D3C9E1FB135}.Debug|x86.ActiveCfg = Debug|x86
+		{C143CA2E-DC6F-4D70-A9C6-7D3C9E1FB135}.Debug|x86.Build.0 = Debug|x86
 		{C143CA2E-DC6F-4D70-A9C6-7D3C9E1FB135}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C143CA2E-DC6F-4D70-A9C6-7D3C9E1FB135}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C143CA2E-DC6F-4D70-A9C6-7D3C9E1FB135}.Release|x64.ActiveCfg = Release|Any CPU
+		{C143CA2E-DC6F-4D70-A9C6-7D3C9E1FB135}.Release|x64.Build.0 = Release|Any CPU
+		{C143CA2E-DC6F-4D70-A9C6-7D3C9E1FB135}.Release|x86.ActiveCfg = Release|x86
+		{C143CA2E-DC6F-4D70-A9C6-7D3C9E1FB135}.Release|x86.Build.0 = Release|x86
 		{161765BB-4464-4308-8E9A-15F4830D499B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{161765BB-4464-4308-8E9A-15F4830D499B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{161765BB-4464-4308-8E9A-15F4830D499B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{161765BB-4464-4308-8E9A-15F4830D499B}.Debug|x64.Build.0 = Debug|Any CPU
+		{161765BB-4464-4308-8E9A-15F4830D499B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{161765BB-4464-4308-8E9A-15F4830D499B}.Debug|x86.Build.0 = Debug|Any CPU
 		{161765BB-4464-4308-8E9A-15F4830D499B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{161765BB-4464-4308-8E9A-15F4830D499B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{161765BB-4464-4308-8E9A-15F4830D499B}.Release|x64.ActiveCfg = Release|Any CPU
+		{161765BB-4464-4308-8E9A-15F4830D499B}.Release|x64.Build.0 = Release|Any CPU
+		{161765BB-4464-4308-8E9A-15F4830D499B}.Release|x86.ActiveCfg = Release|Any CPU
+		{161765BB-4464-4308-8E9A-15F4830D499B}.Release|x86.Build.0 = Release|Any CPU
+		{BB30BB3D-2F93-475E-8456-92FF579E20BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB30BB3D-2F93-475E-8456-92FF579E20BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB30BB3D-2F93-475E-8456-92FF579E20BB}.Debug|x64.ActiveCfg = Debug|x64
+		{BB30BB3D-2F93-475E-8456-92FF579E20BB}.Debug|x64.Build.0 = Debug|x64
+		{BB30BB3D-2F93-475E-8456-92FF579E20BB}.Debug|x86.ActiveCfg = Debug|x86
+		{BB30BB3D-2F93-475E-8456-92FF579E20BB}.Debug|x86.Build.0 = Debug|x86
+		{BB30BB3D-2F93-475E-8456-92FF579E20BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB30BB3D-2F93-475E-8456-92FF579E20BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB30BB3D-2F93-475E-8456-92FF579E20BB}.Release|x64.ActiveCfg = Release|x64
+		{BB30BB3D-2F93-475E-8456-92FF579E20BB}.Release|x64.Build.0 = Release|x64
+		{BB30BB3D-2F93-475E-8456-92FF579E20BB}.Release|x86.ActiveCfg = Release|x86
+		{BB30BB3D-2F93-475E-8456-92FF579E20BB}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {12BD98C9-9551-48FF-9841-DBABF0A7EFA9}
 	EndGlobalSection
 EndGlobal
